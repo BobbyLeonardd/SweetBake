@@ -1,15 +1,20 @@
-# 📡 SweetBake API Documentation
+# SweetBake API Documentation
 
 Base URL: `http://localhost/sweetbake/backend/api`
 
+Semua response menggunakan format JSON:
+```json
+{ "success": true/false, "data": ..., "message": "..." }
+```
+
 ---
 
-## 🔐 Authentication
+## Authentication
 
 ### Login
 **Endpoint:** `POST /auth.php`
 
-**Request Body:**
+Request:
 ```json
 {
   "action": "login",
@@ -18,7 +23,7 @@ Base URL: `http://localhost/sweetbake/backend/api`
 }
 ```
 
-**Response Success:**
+Response sukses:
 ```json
 {
   "success": true,
@@ -27,18 +32,8 @@ Base URL: `http://localhost/sweetbake/backend/api`
     "id": 1,
     "name": "Admin SweetBake",
     "email": "admin@sweetbake.com",
-    "phone": null,
-    "address": null,
     "role": "admin"
   }
-}
-```
-
-**Response Error:**
-```json
-{
-  "success": false,
-  "message": "Invalid password"
 }
 ```
 
@@ -47,434 +42,176 @@ Base URL: `http://localhost/sweetbake/backend/api`
 ### Register
 **Endpoint:** `POST /auth.php`
 
-**Request Body:**
+Request:
 ```json
 {
   "action": "register",
-  "name": "John Doe",
-  "email": "john@example.com",
+  "name": "Budi Santoso",
+  "email": "budi@example.com",
   "password": "password123",
   "phone": "08123456789",
-  "address": "Jl. Contoh No. 123"
-}
-```
-
-**Response Success:**
-```json
-{
-  "success": true,
-  "message": "Registration successful",
-  "data": {
-    "id": 2,
-    "name": "John Doe",
-    "email": "john@example.com",
-    "role": "customer"
-  }
+  "address": "Jl. Mawar No. 5, Bandung"
 }
 ```
 
 ---
 
-## 🍰 Products
+## Products
 
-### Get All Products
-**Endpoint:** `GET /products.php`
+### Ambil semua produk
+`GET /products.php`
 
-**Response:**
-```json
-{
-  "success": true,
-  "data": [
-    {
-      "id": "1",
-      "category_id": "1",
-      "name": "Kue Ulang Tahun Coklat",
-      "description": "Kue ulang tahun dengan lapisan coklat lembut",
-      "price": "250000.00",
-      "stock": "10",
-      "image_url": "https://via.placeholder.com/300",
-      "is_available": "1",
-      "category_name": "Kue Ulang Tahun",
-      "created_at": "2024-01-01 10:00:00"
-    }
-  ]
-}
-```
+### Ambil satu produk
+`GET /products.php?id=1`
 
----
+### Tambah produk (Admin)
+`POST /products.php`
 
-### Get Single Product
-**Endpoint:** `GET /products.php?id={id}`
-
-**Example:** `GET /products.php?id=1`
-
-**Response:**
-```json
-{
-  "success": true,
-  "data": {
-    "id": "1",
-    "category_id": "1",
-    "name": "Kue Ulang Tahun Coklat",
-    "description": "Kue ulang tahun dengan lapisan coklat lembut",
-    "price": "250000.00",
-    "stock": "10",
-    "image_url": "https://via.placeholder.com/300",
-    "is_available": "1",
-    "category_name": "Kue Ulang Tahun"
-  }
-}
-```
-
----
-
-### Create Product (Admin Only)
-**Endpoint:** `POST /products.php`
-
-**Request Body:**
+Request:
 ```json
 {
   "category_id": 1,
-  "name": "Kue Baru",
-  "description": "Deskripsi kue baru",
-  "price": 150000,
-  "stock": 20,
-  "image_url": "https://example.com/image.jpg",
-  "is_available": 1
-}
-```
-
-**Response:**
-```json
-{
-  "success": true,
-  "message": "Product created successfully",
-  "id": 9
-}
-```
-
----
-
-### Update Product (Admin Only)
-**Endpoint:** `PUT /products.php`
-
-**Request Body:**
-```json
-{
-  "id": 1,
-  "category_id": 1,
-  "name": "Kue Updated",
-  "description": "Deskripsi updated",
-  "price": 200000,
+  "name": "Kue Lapis Surabaya",
+  "description": "Kue lapis klasik dengan lapisan coklat dan vanila",
+  "price": 180000,
   "stock": 15,
-  "image_url": "https://example.com/image.jpg",
+  "image_url": "https://example.com/gambar.jpg",
   "is_available": 1
 }
 ```
 
-**Response:**
-```json
-{
-  "success": true,
-  "message": "Product updated successfully"
-}
-```
+### Update produk (Admin)
+`PUT /products.php` — sama seperti POST, tambahkan field `id`
+
+### Hapus produk (Admin)
+`DELETE /products.php?id=1`
 
 ---
 
-### Delete Product (Admin Only)
-**Endpoint:** `DELETE /products.php?id={id}`
+## Orders
 
-**Example:** `DELETE /products.php?id=1`
+### Semua pesanan (Admin)
+`GET /orders.php`
 
-**Response:**
-```json
-{
-  "success": true,
-  "message": "Product deleted successfully"
-}
-```
+### Pesanan milik customer tertentu
+`GET /orders.php?customer_id=2`
 
----
+### Detail satu pesanan
+`GET /orders.php?id=1`
 
-## 📦 Orders
-
-### Get All Orders (Admin)
-**Endpoint:** `GET /orders.php`
-
-**Response:**
-```json
-{
-  "success": true,
-  "data": [
-    {
-      "id": "1",
-      "customer_id": "2",
-      "order_number": "SB202401011234",
-      "total_amount": "500000.00",
-      "shipping_cost": "15000.00",
-      "shipping_address": "Jl. Contoh No. 123",
-      "shipping_city": "Jakarta",
-      "status": "pending",
-      "payment_status": "unpaid",
-      "customer_name": "John Doe",
-      "created_at": "2024-01-01 10:00:00"
-    }
-  ]
-}
-```
-
----
-
-### Get Customer Orders
-**Endpoint:** `GET /orders.php?customer_id={id}`
-
-**Example:** `GET /orders.php?customer_id=2`
-
----
-
-### Get Single Order
-**Endpoint:** `GET /orders.php?id={id}`
-
-**Example:** `GET /orders.php?id=1`
-
-**Response:**
+Response menyertakan detail item dan riwayat tracking:
 ```json
 {
   "success": true,
   "data": {
     "id": "1",
-    "customer_id": "2",
     "order_number": "SB202401011234",
     "total_amount": "500000.00",
     "shipping_cost": "15000.00",
-    "shipping_address": "Jl. Contoh No. 123",
-    "shipping_city": "Jakarta",
+    "shipping_city": "Bandung",
     "status": "pending",
-    "payment_status": "unpaid",
-    "customer_name": "John Doe",
-    "items": [
-      {
-        "id": "1",
-        "order_id": "1",
-        "product_id": "1",
-        "quantity": "2",
-        "price": "250000.00",
-        "subtotal": "500000.00",
-        "product_name": "Kue Ulang Tahun Coklat",
-        "image_url": "https://via.placeholder.com/300"
-      }
-    ],
-    "tracking": [
-      {
-        "id": "1",
-        "order_id": "1",
-        "status": "pending",
-        "description": "Pesanan dibuat",
-        "created_at": "2024-01-01 10:00:00"
-      }
-    ]
+    "items": [ ... ],
+    "tracking": [ ... ]
   }
 }
 ```
 
----
+### Buat pesanan baru
+`POST /orders.php`
 
-### Create Order
-**Endpoint:** `POST /orders.php`
-
-**Request Body:**
+Request:
 ```json
 {
   "customer_id": 2,
   "total_amount": 500000,
-  "shipping_cost": 15000,
-  "shipping_address": "Jl. Contoh No. 123, Jakarta",
-  "shipping_city": "Jakarta",
-  "notes": "Tolong kirim pagi",
+  "shipping_cost": 20000,
+  "shipping_address": "Jl. Mawar No. 5, Bandung",
+  "shipping_city": "Bandung",
+  "notes": "Tolong dikemas rapi",
   "items": [
-    {
-      "product_id": 1,
-      "quantity": 2,
-      "price": 250000,
-      "subtotal": 500000
-    }
+    { "product_id": 1, "quantity": 2, "price": 250000, "subtotal": 500000 }
   ]
 }
 ```
 
-**Response:**
-```json
-{
-  "success": true,
-  "message": "Order created successfully",
-  "order_id": 1,
-  "order_number": "SB202401011234"
-}
-```
+### Update status pesanan (Admin)
+`PUT /orders.php`
 
----
-
-### Update Order Status (Admin Only)
-**Endpoint:** `PUT /orders.php`
-
-**Request Body:**
+Request:
 ```json
 {
   "id": 1,
   "status": "confirmed",
-  "description": "Pesanan dikonfirmasi dan sedang diproses"
+  "description": "Pesanan sudah dikonfirmasi, mulai diproses"
 }
 ```
 
-**Response:**
-```json
-{
-  "success": true,
-  "message": "Order status updated successfully"
-}
-```
-
-**Status Options:**
-- `pending` - Menunggu Konfirmasi
-- `confirmed` - Dikonfirmasi
-- `processing` - Diproses
-- `shipped` - Dikirim
-- `delivered` - Selesai
-- `cancelled` - Dibatalkan
+Status yang tersedia: `pending` → `confirmed` → `processing` → `shipped` → `delivered` / `cancelled`
 
 ---
 
-## 📂 Categories
+## Categories
 
-### Get All Categories
-**Endpoint:** `GET /categories.php`
+### Ambil semua kategori
+`GET /categories.php`
 
-**Response:**
+Response:
 ```json
 {
   "success": true,
   "data": [
-    {
-      "id": "1",
-      "name": "Kue Ulang Tahun",
-      "description": "Kue untuk perayaan ulang tahun",
-      "created_at": "2024-01-01 10:00:00"
-    },
-    {
-      "id": "2",
-      "name": "Kue Tradisional",
-      "description": "Kue-kue tradisional Indonesia",
-      "created_at": "2024-01-01 10:00:00"
-    }
+    { "id": "1", "name": "Kue Ulang Tahun", "description": "..." },
+    { "id": "2", "name": "Kue Tradisional", "description": "..." }
   ]
 }
 ```
 
 ---
 
-## 🚚 Shipping
+## Shipping
 
-### Get All Shipping Costs
-**Endpoint:** `GET /shipping.php`
+### Semua data ongkos kirim
+`GET /shipping.php`
 
-**Response:**
-```json
-{
-  "success": true,
-  "data": [
-    {
-      "id": "1",
-      "city": "Jakarta",
-      "cost": "15000.00",
-      "estimated_days": "1",
-      "created_at": "2024-01-01 10:00:00"
-    },
-    {
-      "id": "2",
-      "city": "Bandung",
-      "cost": "20000.00",
-      "estimated_days": "2",
-      "created_at": "2024-01-01 10:00:00"
-    }
-  ]
-}
-```
+### Ongkos kirim untuk kota tertentu
+`GET /shipping.php?city=Bandung`
 
----
-
-### Get Shipping Cost by City
-**Endpoint:** `GET /shipping.php?city={city}`
-
-**Example:** `GET /shipping.php?city=Jakarta`
-
-**Response:**
+Response:
 ```json
 {
   "success": true,
   "data": {
-    "id": "1",
-    "city": "Jakarta",
-    "cost": "15000.00",
-    "estimated_days": "1"
+    "city": "Bandung",
+    "cost": "20000.00",
+    "estimated_days": "2"
   }
 }
 ```
 
 ---
 
-## 🔧 Error Responses
+## Error Response
 
-### Standard Error Format
+Format error:
 ```json
 {
   "success": false,
-  "message": "Error message here"
+  "message": "Pesan error di sini"
 }
 ```
 
-### Common Error Messages
-- `"Connection error: ..."` - Database connection failed
-- `"User not found"` - Email tidak terdaftar
-- `"Invalid password"` - Password salah
-- `"Email already registered"` - Email sudah digunakan
-- `"Product not found"` - Produk tidak ditemukan
-- `"Order not found"` - Pesanan tidak ditemukan
+Pesan error umum:
+- `"User not found"` — email tidak terdaftar
+- `"Invalid password"` — password salah
+- `"Email already registered"` — email sudah dipakai
+- `"Product not found"` — produk tidak ditemukan
+- `"Connection error: ..."` — koneksi database bermasalah
 
 ---
 
-## 📝 Notes
+## Catatan
 
-1. **CORS Headers** sudah di-enable untuk semua endpoint
-2. **Content-Type** harus `application/json` untuk POST/PUT requests
-3. **Authentication** belum menggunakan token (bisa ditambahkan JWT)
-4. **File Upload** belum tersedia (bisa ditambahkan untuk gambar produk)
-5. **Pagination** belum tersedia (bisa ditambahkan untuk list yang besar)
-
----
-
-## 🧪 Testing dengan Postman
-
-### Import Collection
-Buat collection baru di Postman dengan endpoint-endpoint di atas.
-
-### Environment Variables
-```
-base_url = http://localhost/sweetbake/backend/api
-```
-
-### Example Request
-```
-POST {{base_url}}/auth.php
-Content-Type: application/json
-
-{
-  "action": "login",
-  "email": "admin@sweetbake.com",
-  "password": "password"
-}
-```
-
----
-
-**Happy Testing! 🚀**
+- CORS header sudah diaktifkan di semua endpoint
+- Untuk request POST dan PUT, gunakan `Content-Type: application/json`
+- Belum ada JWT / token authentication (bisa ditambahkan nanti)
+- Belum ada fitur upload gambar (gambar pakai URL)

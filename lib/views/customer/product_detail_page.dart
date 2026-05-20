@@ -195,8 +195,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () {
-                          final buyNowItem = CartItem(
-                            product: widget.product,
+                          final buyNowItem = CartItem.fromProduct(
+                            widget.product,
                             quantity: _quantity,
                           );
                           Navigator.push(

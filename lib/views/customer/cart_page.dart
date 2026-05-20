@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../providers/cart_provider.dart';
+import '../../models/cart_item_model.dart';
 import '../../config/theme_config.dart';
 import '../../utils/currency_formatter.dart';
 import 'checkout_page.dart';
@@ -45,112 +46,7 @@ class CartPage extends StatelessWidget {
                     itemCount: cartProvider.items.length,
                     itemBuilder: (context, index) {
                       final item = cartProvider.items[index];
-                      return Card(
-                        margin: const EdgeInsets.only(bottom: 12),
-                        child: Padding(
-                          padding: const EdgeInsets.all(12),
-                          child: Row(
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(8),
-                                child: CachedNetworkImage(
-                                  imageUrl: item.product.imageUrl ?? '',
-                                  width: 80,
-                                  height: 80,
-                                  fit: BoxFit.cover,
-                                  errorWidget: (context, url, error) =>
-                                      Container(
-                                    width: 80,
-                                    height: 80,
-                                    color: Colors.grey[200],
-                                    child: const Icon(Icons.cake),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      item.product.name,
-                                      style: ThemeConfig.bodyMedium.copyWith(
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      CurrencyFormatter.format(item.product.price),
-                                      style: ThemeConfig.bodySmall.copyWith(
-                                        color: ThemeConfig.primaryColor,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Row(
-                                      children: [
-                                        IconButton(
-                                          onPressed: () {
-                                            cartProvider.updateQuantity(
-                                              item.product.id,
-                                              item.quantity - 1,
-                                            );
-                                          },
-                                          icon: const Icon(Icons.remove_circle_outline),
-                                          iconSize: 20,
-                                          padding: EdgeInsets.zero,
-                                          constraints: const BoxConstraints(),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 12),
-                                          child: Text(
-                                            '${item.quantity}',
-                                            style: ThemeConfig.bodyMedium.copyWith(
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                        IconButton(
-                                          onPressed: item.quantity < item.product.stock
-                                              ? () {
-                                                  cartProvider.updateQuantity(
-                                                    item.product.id,
-                                                    item.quantity + 1,
-                                                  );
-                                                }
-                                              : null,
-                                          icon: const Icon(Icons.add_circle_outline),
-                                          iconSize: 20,
-                                          padding: EdgeInsets.zero,
-                                          constraints: const BoxConstraints(),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Column(
-                                children: [
-                                  IconButton(
-                                    onPressed: () {
-                                      cartProvider.removeFromCart(item.product.id);
-                                    },
-                                    icon: const Icon(Icons.delete_outline),
-                                    color: ThemeConfig.errorColor,
-                                  ),
-                                  Text(
-                                    CurrencyFormatter.format(item.subtotal),
-                                    style: ThemeConfig.bodyMedium.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
+                      return _buildCartItemCard(context, item, cartProvider);
                     },
                   ),
                 ),
@@ -207,6 +103,225 @@ class CartPage extends StatelessWidget {
                 ),
               ],
             ),
+    );
+  }
+
+  Widget _buildCartItemCard(BuildContext context, CartItem item, CartProvider cartProvider) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 12),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Row(
+          children: [
+            // Image with badge
+            Stack(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: CachedNetworkImage(
+                    imageUrl: item.imageUrl ?? '',
+                    width: 80,
+                    height: 80,
+                    fit: BoxFit.cover,
+                    errorWidget: (context, url, error) => Container(
+                      width: 80,
+                      height: 80,
+                      color: Colors.grey[200],
+                      child: Icon(
+                        item.isBundle ? Icons.card_giftcard_rounded : Icons.cake,
+                        color: Colors.grey[400],
+                      ),
+                    ),
+                  ),
+                ),
+                // Bundle badge
+                if (item.isBundle)
+                  Positioned(
+                    top: 4,
+                    left: 4,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: ThemeConfig.primaryColor,
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Text(
+                        'PAKET',
+                        style: ThemeConfig.bodySmall.copyWith(
+                          color: Colors.white,
+                          fontSize: 9,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+            const SizedBox(width: 12),
+
+            // Item info
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Name
+                  Text(
+                    item.name,
+                    style: ThemeConfig.bodyMedium.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 4),
+
+                  // Price with bundle info
+                  Row(
+                    children: [
+                      Text(
+                        CurrencyFormatter.format(item.price),
+                        style: ThemeConfig.bodySmall.copyWith(
+                          color: ThemeConfig.primaryColor,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      if (item.isBundle) ...[
+                        const SizedBox(width: 6),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: ThemeConfig.successColor.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Text(
+                            '${item.bundle!.discountPercentage.toStringAsFixed(0)}% OFF',
+                            style: ThemeConfig.bodySmall.copyWith(
+                              color: ThemeConfig.successColor,
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+
+                  // Bundle items count
+                  if (item.isBundle && item.bundle!.items != null) ...[
+                    const SizedBox(height: 4),
+                    Text(
+                      '${item.bundle!.items!.length} produk dalam paket',
+                      style: ThemeConfig.bodySmall.copyWith(
+                        color: ThemeConfig.textSecondaryColor,
+                        fontSize: 11,
+                      ),
+                    ),
+                  ],
+
+                  const SizedBox(height: 8),
+
+                  // Quantity controls
+                  Row(
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          cartProvider.updateQuantity(
+                            item.id,
+                            item.type,
+                            item.quantity - 1,
+                          );
+                        },
+                        icon: const Icon(Icons.remove_circle_outline),
+                        iconSize: 20,
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                        color: ThemeConfig.primaryColor,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        child: Text(
+                          '${item.quantity}',
+                          style: ThemeConfig.bodyMedium.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          cartProvider.updateQuantity(
+                            item.id,
+                            item.type,
+                            item.quantity + 1,
+                          );
+                        },
+                        icon: const Icon(Icons.add_circle_outline),
+                        iconSize: 20,
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                        color: ThemeConfig.primaryColor,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+
+            // Delete button and subtotal
+            Column(
+              children: [
+                IconButton(
+                  onPressed: () {
+                    _showDeleteConfirmation(context, item, cartProvider);
+                  },
+                  icon: const Icon(Icons.delete_outline),
+                  color: ThemeConfig.errorColor,
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  CurrencyFormatter.format(item.subtotal),
+                  style: ThemeConfig.bodyMedium.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showDeleteConfirmation(BuildContext context, CartItem item, CartProvider cartProvider) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Hapus Item'),
+        content: Text('Hapus "${item.name}" dari keranjang?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Batal'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              cartProvider.removeFromCart(item.id, item.type);
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('${item.name} dihapus dari keranjang'),
+                  backgroundColor: ThemeConfig.successColor,
+                  behavior: SnackBarBehavior.floating,
+                  duration: const Duration(seconds: 2),
+                ),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: ThemeConfig.errorColor,
+            ),
+            child: const Text('Hapus'),
+          ),
+        ],
+      ),
     );
   }
 }

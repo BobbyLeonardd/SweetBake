@@ -10,6 +10,7 @@ import 'providers/order_provider.dart';
 import 'providers/customer_provider.dart';
 import 'providers/category_provider.dart';
 import 'providers/wishlist_provider.dart';
+import 'providers/bundle_provider.dart';
 import 'views/auth/login_page.dart';
 import 'views/admin/admin_dashboard_page.dart';
 import 'views/customer/customer_home_page.dart';
@@ -17,23 +18,30 @@ import 'views/customer/customer_home_page.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeDateFormatting('id_ID', null);
-  runApp(const MyApp());
+
+  // Muat cart dari local storage sebelum app jalan
+  final cartProvider = CartProvider();
+  await cartProvider.loadCart();
+
+  runApp(MyApp(cartProvider: cartProvider));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final CartProvider cartProvider;
+  const MyApp({super.key, required this.cartProvider});
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider()),
-        ChangeNotifierProvider(create: (_) => CartProvider()),
+        ChangeNotifierProvider<CartProvider>.value(value: cartProvider),
         ChangeNotifierProvider(create: (_) => ProductProvider()),
         ChangeNotifierProvider(create: (_) => OrderProvider()),
         ChangeNotifierProvider(create: (_) => CustomerProvider()),
         ChangeNotifierProvider(create: (_) => CategoryProvider()),
         ChangeNotifierProvider(create: (_) => WishlistProvider()),
+        ChangeNotifierProvider(create: (_) => BundleProvider()),
       ],
       child: MaterialApp(
         title: 'SweetBake',
@@ -50,10 +58,10 @@ class CustomScrollBehavior extends MaterialScrollBehavior {
   const CustomScrollBehavior();
   @override
   Set<PointerDeviceKind> get dragDevices => {
-        PointerDeviceKind.touch,
-        PointerDeviceKind.mouse,
-        PointerDeviceKind.trackpad,
-      };
+    PointerDeviceKind.touch,
+    PointerDeviceKind.mouse,
+    PointerDeviceKind.trackpad,
+  };
 }
 
 class SplashScreen extends StatefulWidget {
@@ -88,9 +96,9 @@ class _SplashScreenState extends State<SplashScreen> {
         );
       }
     } else {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const LoginPage()),
-      );
+      Navigator.of(
+        context,
+      ).pushReplacement(MaterialPageRoute(builder: (_) => const LoginPage()));
     }
   }
 
@@ -101,11 +109,7 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.cake,
-              size: 100,
-              color: ThemeConfig.primaryColor,
-            ),
+            Icon(Icons.cake, size: 100, color: ThemeConfig.primaryColor),
             const SizedBox(height: 24),
             Text(
               'SweetBake',
@@ -114,9 +118,7 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
             ),
             const SizedBox(height: 24),
-            const CircularProgressIndicator(
-              color: ThemeConfig.primaryColor,
-            ),
+            const CircularProgressIndicator(color: ThemeConfig.primaryColor),
           ],
         ),
       ),

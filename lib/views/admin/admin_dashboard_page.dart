@@ -9,6 +9,7 @@ import 'admin_orders_page.dart';
 import 'admin_customers_page.dart';
 import 'admin_categories_page.dart';
 import 'admin_shipping_page.dart';
+import 'admin_bundles_page.dart';
 import '../auth/login_page.dart';
 import '../../services/api_service.dart';
 import '../../utils/currency_formatter.dart';
@@ -146,7 +147,8 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                       }
 
                       final analytics = snapshot.data ?? {};
-                      final revenue = analytics['total_revenue'] ?? 0.0;
+                      final revenue = (analytics['total_revenue'] ?? 0)
+                          .toDouble();
                       final totalCustomers = analytics['total_customers'] ?? 0;
 
                       return Column(
@@ -306,6 +308,20 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (_) => const AdminShippingPage(),
+                        ),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  _MenuCard(
+                    title: 'Kelola Paket Bundling',
+                    subtitle: 'Buat paket bundling dengan harga promo spesial',
+                    icon: Icons.card_giftcard_rounded,
+                    color: Colors.pink.shade500,
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => const AdminBundlesPage(),
                         ),
                       );
                     },

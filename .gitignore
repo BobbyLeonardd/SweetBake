@@ -44,7 +44,6 @@ app.*.map.json
 /android/app/release
 
 # Backend sensitive files
-backend/config/database.php
 backend/.env
 
 # Logs

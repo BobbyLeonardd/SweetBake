@@ -89,14 +89,17 @@ class _RegisterPageState extends State<RegisterPage> {
                     prefixIcon: Icon(Icons.person),
                   ),
                   validator: (value) {
-                    if (value == null || value.isEmpty) {
+                    if (value == null || value.trim().isEmpty) {
                       return 'Nama tidak boleh kosong';
+                    }
+                    if (value.trim().length < 3) {
+                      return 'Nama minimal 3 karakter';
                     }
                     return null;
                   },
                 ),
                 const SizedBox(height: 16),
-                
+
                 TextFormField(
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
@@ -105,35 +108,59 @@ class _RegisterPageState extends State<RegisterPage> {
                     prefixIcon: Icon(Icons.email),
                   ),
                   validator: (value) {
-                    if (value == null || value.isEmpty) {
+                    if (value == null || value.trim().isEmpty) {
                       return 'Email tidak boleh kosong';
                     }
-                    if (!value.contains('@')) {
-                      return 'Email tidak valid';
+                    // validasi email lebih ketat pakai regex
+                    final emailRegex = RegExp(r'^[\w\-.]+@[\w\-]+\.[a-zA-Z]{2,}$');
+                    if (!emailRegex.hasMatch(value.trim())) {
+                      return 'Format email tidak valid (contoh: nama@email.com)';
                     }
                     return null;
                   },
                 ),
                 const SizedBox(height: 16),
-                
+
                 TextFormField(
                   controller: _phoneController,
                   keyboardType: TextInputType.phone,
                   decoration: const InputDecoration(
                     labelText: 'No. Telepon',
                     prefixIcon: Icon(Icons.phone),
+                    hintText: 'Contoh: 08123456789',
                   ),
+                  validator: (value) {
+                    if (value != null && value.isNotEmpty) {
+                      if (!RegExp(r'^[0-9+\-\s]+$').hasMatch(value)) {
+                        return 'Nomor telepon hanya boleh angka, +, atau -';
+                      }
+                      if (value.replaceAll(RegExp(r'[^0-9]'), '').length < 9) {
+                        return 'Nomor telepon terlalu pendek';
+                      }
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 16),
-                
+
                 TextFormField(
                   controller: _addressController,
                   maxLines: 3,
                   decoration: const InputDecoration(
-                    labelText: 'Alamat',
+                    labelText: 'Alamat Lengkap',
                     prefixIcon: Icon(Icons.location_on),
                     alignLabelWithHint: true,
+                    hintText: 'Jalan, RT/RW, Kelurahan, Kota...',
                   ),
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Alamat tidak boleh kosong';
+                    }
+                    if (value.trim().length < 10) {
+                      return 'Alamat terlalu singkat, isi dengan lengkap';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 16),
                 

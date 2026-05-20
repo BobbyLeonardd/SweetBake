@@ -7,9 +7,13 @@ import '../models/order_model.dart';
 import '../models/category_model.dart';
 import '../models/shipping_model.dart';
 import '../models/user_model.dart';
+import '../models/bundle_model.dart';
 
 class ApiService {
-  // Auth
+  // ============================================================
+  // AUTENTIKASI
+  // ============================================================
+
   static Future<Map<String, dynamic>> login(String email, String password) async {
     try {
       final response = await http.post(
@@ -24,7 +28,7 @@ class ApiService {
 
       return jsonDecode(response.body);
     } catch (e) {
-      return {'success': false, 'message': 'Connection error: $e'};
+      return {'success': false, 'message': 'Tidak bisa terhubung ke server: $e'};
     }
   }
 
@@ -41,11 +45,14 @@ class ApiService {
 
       return jsonDecode(response.body);
     } catch (e) {
-      return {'success': false, 'message': 'Connection error: $e'};
+      return {'success': false, 'message': 'Gagal mendaftar, cek koneksi internet: $e'};
     }
   }
 
-  // Products
+  // ============================================================
+  // PRODUK
+  // ============================================================
+
   static Future<List<Product>> getProducts() async {
     try {
       final response = await http.get(Uri.parse(ApiConfig.productsEndpoint));
@@ -58,7 +65,7 @@ class ApiService {
       }
       return [];
     } catch (e) {
-      debugPrint('Error fetching products: $e');
+      debugPrint('getProducts error: $e');
       return [];
     }
   }
@@ -75,7 +82,7 @@ class ApiService {
       }
       return null;
     } catch (e) {
-      debugPrint('Error fetching product: $e');
+      debugPrint('getProduct error: $e');
       return null;
     }
   }
@@ -90,7 +97,7 @@ class ApiService {
 
       return jsonDecode(response.body);
     } catch (e) {
-      return {'success': false, 'message': 'Connection error: $e'};
+      return {'success': false, 'message': 'Gagal menambah produk: $e'};
     }
   }
 
@@ -104,7 +111,7 @@ class ApiService {
 
       return jsonDecode(response.body);
     } catch (e) {
-      return {'success': false, 'message': 'Connection error: $e'};
+      return {'success': false, 'message': 'Gagal mengupdate produk: $e'};
     }
   }
 
@@ -116,11 +123,15 @@ class ApiService {
 
       return jsonDecode(response.body);
     } catch (e) {
-      return {'success': false, 'message': 'Connection error: $e'};
+      return {'success': false, 'message': 'Gagal menghapus produk: $e'};
     }
   }
 
-  // Orders
+  // ============================================================
+  // PESANAN
+  // ============================================================
+
+  // customerId null = ambil semua pesanan (untuk admin)
   static Future<List<Order>> getOrders({int? customerId}) async {
     try {
       String url = ApiConfig.ordersEndpoint;
@@ -138,7 +149,7 @@ class ApiService {
       }
       return [];
     } catch (e) {
-      debugPrint('Error fetching orders: $e');
+      debugPrint('getOrders error: $e');
       return [];
     }
   }
@@ -155,7 +166,7 @@ class ApiService {
       }
       return null;
     } catch (e) {
-      debugPrint('Error fetching order: $e');
+      debugPrint('getOrder error: $e');
       return null;
     }
   }
@@ -170,7 +181,7 @@ class ApiService {
 
       return jsonDecode(response.body);
     } catch (e) {
-      return {'success': false, 'message': 'Connection error: $e'};
+      return {'success': false, 'message': 'Pesanan gagal dibuat: $e'};
     }
   }
 
@@ -192,11 +203,14 @@ class ApiService {
 
       return jsonDecode(response.body);
     } catch (e) {
-      return {'success': false, 'message': 'Connection error: $e'};
+      return {'success': false, 'message': 'Gagal update status pesanan: $e'};
     }
   }
 
-  // Categories
+  // ============================================================
+  // KATEGORI
+  // ============================================================
+
   static Future<List<Category>> getCategories() async {
     try {
       final response = await http.get(Uri.parse(ApiConfig.categoriesEndpoint));
@@ -209,7 +223,7 @@ class ApiService {
       }
       return [];
     } catch (e) {
-      debugPrint('Error fetching categories: $e');
+      debugPrint('getCategories error: $e');
       return [];
     }
   }
@@ -221,10 +235,9 @@ class ApiService {
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(categoryData),
       );
-
       return jsonDecode(response.body);
     } catch (e) {
-      return {'success': false, 'message': 'Connection error: $e'};
+      return {'success': false, 'message': 'Gagal menambah kategori: $e'};
     }
   }
 
@@ -235,10 +248,9 @@ class ApiService {
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(categoryData),
       );
-
       return jsonDecode(response.body);
     } catch (e) {
-      return {'success': false, 'message': 'Connection error: $e'};
+      return {'success': false, 'message': 'Gagal update kategori: $e'};
     }
   }
 
@@ -247,14 +259,16 @@ class ApiService {
       final response = await http.delete(
         Uri.parse('${ApiConfig.categoriesEndpoint}?id=$id'),
       );
-
       return jsonDecode(response.body);
     } catch (e) {
-      return {'success': false, 'message': 'Connection error: $e'};
+      return {'success': false, 'message': 'Gagal menghapus kategori: $e'};
     }
   }
 
-  // Shipping
+  // ============================================================
+  // ONGKOS KIRIM
+  // ============================================================
+
   static Future<List<ShippingCost>> getShippingCosts() async {
     try {
       final response = await http.get(Uri.parse(ApiConfig.shippingEndpoint));
@@ -267,11 +281,12 @@ class ApiService {
       }
       return [];
     } catch (e) {
-      debugPrint('Error fetching shipping costs: $e');
+      debugPrint('getShippingCosts error: $e');
       return [];
     }
   }
 
+  // ambil ongkir berdasarkan kota yang dipilih customer saat checkout
   static Future<ShippingCost?> getShippingCostByCity(String city) async {
     try {
       final response = await http.get(
@@ -284,7 +299,7 @@ class ApiService {
       }
       return null;
     } catch (e) {
-      debugPrint('Error fetching shipping cost: $e');
+      debugPrint('getShippingCostByCity error: $e');
       return null;
     }
   }
@@ -296,10 +311,9 @@ class ApiService {
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(shippingData),
       );
-
       return jsonDecode(response.body);
     } catch (e) {
-      return {'success': false, 'message': 'Connection error: $e'};
+      return {'success': false, 'message': 'Gagal menambah data ongkir: $e'};
     }
   }
 
@@ -310,10 +324,9 @@ class ApiService {
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(shippingData),
       );
-
       return jsonDecode(response.body);
     } catch (e) {
-      return {'success': false, 'message': 'Connection error: $e'};
+      return {'success': false, 'message': 'Gagal update data ongkir: $e'};
     }
   }
 
@@ -322,14 +335,16 @@ class ApiService {
       final response = await http.delete(
         Uri.parse('${ApiConfig.shippingEndpoint}?id=$id'),
       );
-
       return jsonDecode(response.body);
     } catch (e) {
-      return {'success': false, 'message': 'Connection error: $e'};
+      return {'success': false, 'message': 'Gagal menghapus data ongkir: $e'};
     }
   }
 
-  // Users / Customers
+  // ============================================================
+  // USER / CUSTOMER (untuk halaman admin)
+  // ============================================================
+
   static Future<List<User>> getCustomers() async {
     try {
       final response = await http.get(Uri.parse(ApiConfig.usersEndpoint));
@@ -342,7 +357,7 @@ class ApiService {
       }
       return [];
     } catch (e) {
-      debugPrint('Error fetching customers: $e');
+      debugPrint('getCustomers error: $e');
       return [];
     }
   }
@@ -354,10 +369,9 @@ class ApiService {
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(userData),
       );
-
       return jsonDecode(response.body);
     } catch (e) {
-      return {'success': false, 'message': 'Connection error: $e'};
+      return {'success': false, 'message': 'Gagal update data customer: $e'};
     }
   }
 
@@ -366,17 +380,21 @@ class ApiService {
       final response = await http.delete(
         Uri.parse('${ApiConfig.usersEndpoint}?id=$id'),
       );
-
       return jsonDecode(response.body);
     } catch (e) {
-      return {'success': false, 'message': 'Connection error: $e'};
+      return {'success': false, 'message': 'Gagal menghapus customer: $e'};
     }
   }
 
-  // Wishlist
+  // ============================================================
+  // WISHLIST
+  // ============================================================
+
   static Future<List<Product>> getWishlist(int userId) async {
     try {
-      final response = await http.get(Uri.parse('${ApiConfig.wishlistsEndpoint}?action=get_wishlist&user_id=$userId'));
+      final response = await http.get(
+        Uri.parse('${ApiConfig.wishlistsEndpoint}?action=get_wishlist&user_id=$userId'),
+      );
       final data = jsonDecode(response.body);
 
       if (data['success']) {
@@ -386,11 +404,12 @@ class ApiService {
       }
       return [];
     } catch (e) {
-      debugPrint('Error fetching wishlist: $e');
+      debugPrint('getWishlist error: $e');
       return [];
     }
   }
 
+  // toggle: kalau produk belum di wishlist → tambah, kalau sudah → hapus
   static Future<Map<String, dynamic>> toggleWishlist(int userId, int productId) async {
     try {
       final response = await http.post(
@@ -404,11 +423,14 @@ class ApiService {
 
       return jsonDecode(response.body);
     } catch (e) {
-      return {'success': false, 'message': 'Connection error: $e'};
+      return {'success': false, 'message': 'Gagal update wishlist: $e'};
     }
   }
 
-  // Analytics
+  // ============================================================
+  // ANALYTICS (untuk dashboard admin)
+  // ============================================================
+
   static Future<Map<String, dynamic>> getAnalytics() async {
     try {
       final response = await http.get(Uri.parse(ApiConfig.analyticsEndpoint));
@@ -419,8 +441,117 @@ class ApiService {
       }
       return {};
     } catch (e) {
-      debugPrint('Error fetching analytics: $e');
+      debugPrint('getAnalytics error: $e');
       return {};
+    }
+  }
+
+  // ============================================================
+  // BUNDLES (Paket Bundling Kue)
+  // ============================================================
+
+  static Future<List<Bundle>> getBundles() async {
+    try {
+      final response = await http.get(Uri.parse(ApiConfig.bundlesEndpoint));
+      final data = jsonDecode(response.body);
+
+      if (data['success']) {
+        return (data['data'] as List)
+            .map((json) => Bundle.fromJson(json))
+            .toList();
+      }
+      return [];
+    } catch (e) {
+      debugPrint('getBundles error: $e');
+      return [];
+    }
+  }
+
+  static Future<Bundle?> getBundle(int id) async {
+    try {
+      final response = await http.get(
+        Uri.parse('${ApiConfig.bundlesEndpoint}?id=$id'),
+      );
+      final data = jsonDecode(response.body);
+
+      if (data['success']) {
+        return Bundle.fromJson(data['data']);
+      }
+      return null;
+    } catch (e) {
+      debugPrint('getBundle error: $e');
+      return null;
+    }
+  }
+
+  static Future<Map<String, dynamic>> createBundle(Map<String, dynamic> bundleData) async {
+    try {
+      final response = await http.post(
+        Uri.parse(ApiConfig.bundlesEndpoint),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(bundleData),
+      );
+
+      return jsonDecode(response.body);
+    } catch (e) {
+      return {'success': false, 'message': 'Gagal menambah paket bundling: $e'};
+    }
+  }
+
+  static Future<Map<String, dynamic>> updateBundle(int id, Map<String, dynamic> bundleData) async {
+    try {
+      final response = await http.put(
+        Uri.parse(ApiConfig.bundlesEndpoint),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'id': id, ...bundleData}),
+      );
+
+      return jsonDecode(response.body);
+    } catch (e) {
+      return {'success': false, 'message': 'Gagal update paket bundling: $e'};
+    }
+  }
+
+  static Future<Map<String, dynamic>> deleteBundle(int id) async {
+    try {
+      final response = await http.delete(
+        Uri.parse('${ApiConfig.bundlesEndpoint}?id=$id'),
+      );
+
+      return jsonDecode(response.body);
+    } catch (e) {
+      return {'success': false, 'message': 'Gagal menghapus paket bundling: $e'};
+    }
+  }
+
+  // Bundle Items
+  static Future<Map<String, dynamic>> addBundleItem(int bundleId, int productId, int quantity) async {
+    try {
+      final response = await http.post(
+        Uri.parse('${ApiConfig.bundlesEndpoint}?action=add_item'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'bundle_id': bundleId,
+          'product_id': productId,
+          'quantity': quantity,
+        }),
+      );
+
+      return jsonDecode(response.body);
+    } catch (e) {
+      return {'success': false, 'message': 'Gagal menambah produk ke bundling: $e'};
+    }
+  }
+
+  static Future<Map<String, dynamic>> removeBundleItem(int bundleItemId) async {
+    try {
+      final response = await http.delete(
+        Uri.parse('${ApiConfig.bundlesEndpoint}?action=remove_item&item_id=$bundleItemId'),
+      );
+
+      return jsonDecode(response.body);
+    } catch (e) {
+      return {'success': false, 'message': 'Gagal menghapus produk dari bundling: $e'};
     }
   }
 }

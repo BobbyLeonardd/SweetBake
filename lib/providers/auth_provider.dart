@@ -55,6 +55,27 @@ class AuthProvider with ChangeNotifier {
     return result;
   }
 
+  // Update profile
+  Future<Map<String, dynamic>> updateProfile(Map<String, dynamic> data) async {
+    _isLoading = true;
+    notifyListeners();
+
+    final result = await ApiService.updateCustomer({
+      'id': _user!.id,
+      ...data,
+    });
+
+    if (result['success'] && result['data'] != null) {
+      _user = User.fromJson(result['data']);
+      await AuthService.saveUser(_user!);
+    }
+
+    _isLoading = false;
+    notifyListeners();
+
+    return result;
+  }
+
   // Logout
   Future<void> logout() async {
     await AuthService.logout();

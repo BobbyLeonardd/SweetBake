@@ -4,10 +4,14 @@ import '../../providers/auth_provider.dart';
 import '../../providers/product_provider.dart';
 import '../../providers/cart_provider.dart';
 import '../../providers/wishlist_provider.dart';
+import '../../providers/bundle_provider.dart';
 import '../../config/theme_config.dart';
 import '../../widgets/product_card.dart';
+import '../../widgets/bundle_card.dart';
 import '../../widgets/loading_widget.dart';
+import '../../widgets/empty_state_widget.dart';
 import 'product_detail_page.dart';
+import 'bundle_detail_page.dart';
 import 'cart_page.dart';
 import 'orders_page.dart';
 import 'profile_page.dart';
@@ -32,6 +36,7 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<ProductProvider>(context, listen: false).fetchProducts();
       Provider.of<ProductProvider>(context, listen: false).fetchCategories();
+      Provider.of<BundleProvider>(context, listen: false).fetchBundles();
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
       if (authProvider.user != null) {
         Provider.of<WishlistProvider>(context, listen: false).fetchWishlist(authProvider.user!.id);
@@ -48,6 +53,7 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
   Widget _buildHomePage() {
     final authProvider = Provider.of<AuthProvider>(context);
     final productProvider = Provider.of<ProductProvider>(context);
+    final bundleProvider = Provider.of<BundleProvider>(context);
     
     // filter sesuai search & kategori
     var products = _searchQuery.isEmpty
@@ -156,6 +162,74 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
             ),
           ),
 
+        // Paket Bundling Section
+        if (!bundleProvider.isLoading && bundleProvider.availableBundles.isNotEmpty)
+          SliverToBoxAdapter(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.card_giftcard_rounded,
+                        color: ThemeConfig.primaryColor,
+                        size: 24,
+                      ),
+                      const SizedBox(width: 8),
+                      Text('Paket Bundling', style: ThemeConfig.heading3),
+                      const Spacer(),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [ThemeConfig.primaryColor, ThemeConfig.accentColor],
+                          ),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          'HEMAT!',
+                          style: ThemeConfig.bodySmall.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 12),
+                SizedBox(
+                  height: 240,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    itemCount: bundleProvider.availableBundles.length,
+                    itemBuilder: (context, index) {
+                      final bundle = bundleProvider.availableBundles[index];
+                      return Container(
+                        width: 200,
+                        margin: const EdgeInsets.only(right: 12),
+                        child: BundleCard(
+                          bundle: bundle,
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => BundleDetailPage(bundle: bundle),
+                              ),
+                            );
+                          },
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(height: 24),
+              ],
+            ),
+          ),
+
         // title section
         SliverToBoxAdapter(
           child: Padding(
@@ -173,22 +247,31 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
           const SliverFillRemaining(
             child: LoadingWidget(),
           )
+        else if (productProvider.hasError)
+          SliverFillRemaining(
+            child: EmptyStateWidget(
+              icon: Icons.wifi_off_rounded,
+              title: 'Gagal Memuat Produk',
+              subtitle: productProvider.errorMessage,
+              buttonLabel: 'Coba Lagi',
+              onButtonPressed: () {
+                productProvider.fetchProducts();
+                productProvider.fetchCategories();
+              },
+            ),
+          )
         else if (products.isEmpty)
           SliverFillRemaining(
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.cake_outlined, size: 64, color: ThemeConfig.textSecondaryColor.withValues(alpha: 0.5)),
-                  const SizedBox(height: 16),
-                  Text(
-                    _searchQuery.isEmpty && _selectedCategoryId == null
-                        ? 'Belum ada produk'
-                        : 'Produk tidak ditemukan',
-                    style: ThemeConfig.bodyLarge.copyWith(color: ThemeConfig.textSecondaryColor),
-                  ),
-                ],
-              ),
+            child: EmptyStateWidget(
+              icon: Icons.cake_outlined,
+              title: _searchQuery.isNotEmpty
+                  ? 'Produk tidak ditemukan'
+                  : _selectedCategoryId != null
+                      ? 'Belum ada produk di kategori ini'
+                      : 'Belum ada produk',
+              subtitle: _searchQuery.isNotEmpty
+                  ? 'Coba kata kunci lain'
+                  : null,
             ),
           )
         else
