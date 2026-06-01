@@ -8,6 +8,18 @@ import '../../utils/currency_formatter.dart';
 import '../../utils/date_formatter.dart';
 import '../../widgets/loading_widget.dart';
 
+String _paymentMethodLabel(String method) {
+  const labels = {
+    'qris': 'QRIS',
+    'transfer_bank': 'Transfer Bank',
+    'cash': 'Cash / Tunai',
+    'debit': 'Kartu Debit',
+    'kredit': 'Kartu Kredit',
+    'cod': 'COD',
+  };
+  return labels[method] ?? method;
+}
+
 class AdminOrderDetailPage extends StatefulWidget {
   final int orderId;
 
@@ -202,14 +214,50 @@ class _AdminOrderDetailPageState extends State<AdminOrderDetailPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  if (_order!.branchName != null) ...[
+                    Text('Cabang', style: ThemeConfig.bodySmall),
+                    Text(_order!.branchName!,
+                        style: ThemeConfig.bodyMedium
+                            .copyWith(fontWeight: FontWeight.w600)),
+                    const SizedBox(height: 8),
+                  ],
+                  Text('Metode', style: ThemeConfig.bodySmall),
+                  Row(children: [
+                    Icon(
+                      _order!.deliveryMethod == 'pickup'
+                          ? Icons.storefront_rounded
+                          : Icons.delivery_dining_rounded,
+                      size: 16,
+                      color: ThemeConfig.primaryColor,
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      _order!.deliveryMethod == 'pickup'
+                          ? 'Ambil Sendiri'
+                          : 'Diantar',
+                      style: ThemeConfig.bodyMedium
+                          .copyWith(fontWeight: FontWeight.w600),
+                    ),
+                  ]),
+                  const SizedBox(height: 8),
                   Text('Alamat', style: ThemeConfig.bodySmall),
                   Text(_order!.shippingAddress),
                   const SizedBox(height: 8),
-                  Text('Kota', style: ThemeConfig.bodySmall),
-                  Text(_order!.shippingCity ?? '-'),
-                  const SizedBox(height: 8),
                   Text('Ongkir', style: ThemeConfig.bodySmall),
-                  Text(CurrencyFormatter.format(_order!.shippingCost)),
+                  Text(
+                    _order!.shippingCost == 0
+                        ? 'Gratis'
+                        : CurrencyFormatter.format(_order!.shippingCost),
+                  ),
+                  if (_order!.paymentMethod != null) ...[  
+                    const SizedBox(height: 8),
+                    Text('Metode Pembayaran', style: ThemeConfig.bodySmall),
+                    Text(
+                      _paymentMethodLabel(_order!.paymentMethod!),
+                      style: ThemeConfig.bodyMedium
+                          .copyWith(fontWeight: FontWeight.w600),
+                    ),
+                  ],
                 ],
               ),
             ),

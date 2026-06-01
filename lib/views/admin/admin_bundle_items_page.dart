@@ -36,7 +36,6 @@ class _AdminBundleItemsPageState extends State<AdminBundleItemsPage> {
     final bundleProvider = Provider.of<BundleProvider>(context);
     final productProvider = Provider.of<ProductProvider>(context);
 
-    // Get updated bundle data
     final currentBundle = bundleProvider.bundles
         .firstWhere((b) => b.id == widget.bundle.id, orElse: () => widget.bundle);
 
@@ -182,7 +181,6 @@ class _AdminBundleItemsPageState extends State<AdminBundleItemsPage> {
 
                   const SizedBox(height: 24),
 
-                  // Add product button
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton.icon(

@@ -9,18 +9,20 @@ Baca, pahami, dan gunain contekan penjelasan di bawah ini pas presentasi atau ta
 Teknologi:
 - Frontend: Flutter (Dart) dengan Provider State Management
 - Backend: PHP dengan PDO (aman dari SQL Injection)
-- Database: MySQL (10 tabel)
+- Database: MySQL (11 tabel)
 - Server: Laragon/XAMPP (Apache + MySQL)
 
 Fitur Utama:
 1. Authentication (Login/Register)
 2. CRUD Produk & Kategori
 3. Keranjang Belanja (Persistent)
-4. Checkout & Ongkir
+4. Checkout & Ongkir (Diantar / Ambil di Cabang)
 5. Order Management & Tracking
 6. Wishlist
-7. Paket Bundling (FITUR BARU!)
-8. Bundle Cart (FITUR TERBARU!)
+7. Paket Bundling
+8. Bundle Cart (product + bundle dalam 1 transaksi)
+9. Kelola Cabang Toko (BARU!)
+10. Konfirmasi Pembayaran Customer (BARU!)
 
 ## FITUR BARU: PAKET BUNDLING & BUNDLE CART
 
@@ -60,12 +62,14 @@ Urutan Demo yang Disarankan:
 3. Customer Flow (Aul, Dilla - 8 menit)
 - Login sebagai customer
 - Browse produk di beranda
-- Lihat paket bundling (BARU!)
+- Lihat paket bundling
 - Tambah produk ke cart
-- Tambah bundle ke cart (BARU!)
+- Tambah bundle ke cart
 - Wishlist
-- Checkout
-- Tracking pesanan
+- Checkout dengan metode DIANTAR (pilih kota, isi alamat)
+- Checkout dengan metode AMBIL SENDIRI di cabang (tunjukkan gratis ongkir!)
+- Konfirmasi Sudah Bayar dari halaman detail pesanan (BARU!)
+- Tracking riwayat pesanan
 
 4. Technical Deep Dive (Miya - 3 menit)
 - Penjelasan arsitektur
@@ -289,21 +293,25 @@ Demo yang Harus Bisa:
 
 ---
 
-### **4. DILLA - Shopping Cart & Bundle Cart**
+### **4. DILLA - Shopping Cart, Bundle Cart & Checkout**
 
 **Tanggung Jawab:**
 - Cart management
 - **Bundle cart integration** 🛒
-- Checkout flow
+- Checkout flow (Diantar & Ambil di Cabang)
 - Shipping cost calculation
 - **Mixed cart (product + bundle)** 🛒
+- **Konfirmasi pembayaran customer** 💳
+- **Validasi stok saat checkout** ✅
 
 **File yang Harus Dipahami:**
 - `lib/providers/cart_provider.dart` 🛒
 - `lib/models/cart_item_model.dart` 🛒
 - `lib/views/customer/cart_page.dart` 🛒
 - `lib/views/customer/checkout_page.dart`
+- `lib/views/customer/order_detail_page.dart`
 - `backend/api/shipping.php`
+- `backend/api/branches.php`
 
 **Contekan Penjelasan:**
 
@@ -311,10 +319,13 @@ Demo yang Harus Bisa:
 "Cart menggunakan Provider untuk state management dan SharedPreferences untuk persistence. Data cart tersimpan lokal di device, jadi tidak hilang saat app ditutup. Quantity bisa diubah dengan tombol +/-, subtotal otomatis update."
 
 **2. Bundle Cart Integration:** 🛒
-"Ini fitur terbaru kami. CartItem sekarang support 2 tipe: Product dan Bundle. Kami pakai enum `CartItemType` untuk type safety. Bundle di cart ditampilkan dengan badge 'PAKET' dan badge diskon. Customer bisa checkout product dan bundle sekaligus dalam satu transaksi."
+"CartItem sekarang support 2 tipe: Product dan Bundle. Kami pakai enum `CartItemType` untuk type safety. Bundle di cart ditampilkan dengan badge 'PAKET' dan badge diskon. Customer bisa checkout product dan bundle sekaligus dalam satu transaksi."
 
-**3. Checkout Flow:**
-"Saat checkout, customer pilih kota tujuan. Sistem otomatis kalkulasi ongkir dari API `shipping.php`. Total = Subtotal Cart + Ongkir. Setelah konfirmasi, data dikirim ke API `orders.php` dan cart dikosongkan."
+**3. Checkout Flow dengan 2 Metode:**
+"Saat checkout, customer bisa pilih metode: DIANTAR (isi alamat, pilih cabang asal, ada ongkir) atau AMBIL SENDIRI (pilih cabang, ongkir gratis!). Sistem juga validasi stok produk sebelum pesanan dibuat — kalau ada produk stok habis, customer akan dikasih notifikasi."
+
+**4. Konfirmasi Pembayaran:** 💳
+"Setelah pesanan dibuat, customer bisa klik tombol 'SUDAH BAYAR' di halaman detail pesanan. Ini mengirim konfirmasi ke admin bahwa customer sudah bayar dan menunggu verifikasi. Fitur ini memanfaatkan field `payment_status` di tabel `orders`."
 
 **Demo yang Harus Bisa:**
 - Tambah produk ke cart
@@ -322,7 +333,9 @@ Demo yang Harus Bisa:
 - **Tunjukkan mixed cart** 🛒
 - Update quantity
 - Hapus item dari cart
-- Checkout dengan ongkir
+- **Checkout Diantar** (isi alamat, lihat ongkir)
+- **Checkout Ambil Sendiri di Cabang** (tunjukkan ongkir GRATIS!)
+- **Klik tombol SUDAH BAYAR di detail pesanan** 💳
 - Cart persistence (tutup & buka app)
 
 ---
@@ -386,12 +399,14 @@ Demo yang Harus Bisa:
 5. Tambah produk ke cart (Dilla)
 6. **Tambah bundle ke cart** 🛒 (Dilla)
 7. **Tunjukkan mixed cart** 🛒 (Dilla)
-8. Checkout (Dilla)
-9. Lihat pesanan (Aul)
+8. Checkout metode Diantar (Dilla)
+9. **Checkout metode Ambil di Cabang - tunjukkan ongkir GRATIS!** 🏪 (Dilla)
+10. **Klik SUDAH BAYAR di detail pesanan** 💳 (Dilla)
+11. Lihat riwayat pesanan & tracking (Aul)
 
 ### **Menit 16-18: Technical Explanation (Miya)**
 1. Arsitektur aplikasi
-2. Database schema (10 tabel)
+2. Database schema (11 tabel)
 3. API endpoints
 4. State management dengan Provider
 5. **Bundle cart implementation** 🛒

@@ -248,6 +248,15 @@ class CartPage extends StatelessWidget {
                       ),
                       IconButton(
                         onPressed: () {
+                          if (item.isProduct && item.quantity >= item.product!.stock) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Stok tidak mencukupi'),
+                                backgroundColor: ThemeConfig.errorColor,
+                              ),
+                            );
+                            return;
+                          }
                           cartProvider.updateQuantity(
                             item.id,
                             item.type,

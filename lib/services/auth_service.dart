@@ -13,7 +13,6 @@ class AuthService {
     await prefs.setBool(_isLoggedInKey, true);
   }
 
-  // Get user data
   static Future<User?> getUser() async {
     final prefs = await SharedPreferences.getInstance();
     final userData = prefs.getString(_userKey);
@@ -24,7 +23,6 @@ class AuthService {
     return null;
   }
 
-  // Check if user is logged in
   static Future<bool> isLoggedIn() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getBool(_isLoggedInKey) ?? false;

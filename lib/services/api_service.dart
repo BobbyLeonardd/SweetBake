@@ -8,13 +8,11 @@ import '../models/category_model.dart';
 import '../models/shipping_model.dart';
 import '../models/user_model.dart';
 import '../models/bundle_model.dart';
+import '../models/branch_model.dart';
 
 class ApiService {
-  // ============================================================
-  // AUTENTIKASI
-  // ============================================================
-
-  static Future<Map<String, dynamic>> login(String email, String password) async {
+    // AUTENTIKASI
+    static Future<Map<String, dynamic>> login(String email, String password) async {
     try {
       final response = await http.post(
         Uri.parse(ApiConfig.authEndpoint),
@@ -49,11 +47,8 @@ class ApiService {
     }
   }
 
-  // ============================================================
-  // PRODUK
-  // ============================================================
-
-  static Future<List<Product>> getProducts() async {
+    // PRODUK
+    static Future<List<Product>> getProducts() async {
     try {
       final response = await http.get(Uri.parse(ApiConfig.productsEndpoint));
       final data = jsonDecode(response.body);
@@ -127,11 +122,8 @@ class ApiService {
     }
   }
 
-  // ============================================================
-  // PESANAN
-  // ============================================================
-
-  // customerId null = ambil semua pesanan (untuk admin)
+    // PESANAN
+    // customerId null = ambil semua pesanan (untuk admin)
   static Future<List<Order>> getOrders({int? customerId}) async {
     try {
       String url = ApiConfig.ordersEndpoint;
@@ -207,11 +199,8 @@ class ApiService {
     }
   }
 
-  // ============================================================
-  // KATEGORI
-  // ============================================================
-
-  static Future<List<Category>> getCategories() async {
+    // KATEGORI
+    static Future<List<Category>> getCategories() async {
     try {
       final response = await http.get(Uri.parse(ApiConfig.categoriesEndpoint));
       final data = jsonDecode(response.body);
@@ -265,11 +254,8 @@ class ApiService {
     }
   }
 
-  // ============================================================
-  // ONGKOS KIRIM
-  // ============================================================
-
-  static Future<List<ShippingCost>> getShippingCosts() async {
+    // ONGKOS KIRIM
+    static Future<List<ShippingCost>> getShippingCosts() async {
     try {
       final response = await http.get(Uri.parse(ApiConfig.shippingEndpoint));
       final data = jsonDecode(response.body);
@@ -341,11 +327,8 @@ class ApiService {
     }
   }
 
-  // ============================================================
-  // USER / CUSTOMER (untuk halaman admin)
-  // ============================================================
-
-  static Future<List<User>> getCustomers() async {
+    // USER / CUSTOMER (untuk halaman admin)
+    static Future<List<User>> getCustomers() async {
     try {
       final response = await http.get(Uri.parse(ApiConfig.usersEndpoint));
       final data = jsonDecode(response.body);
@@ -386,11 +369,8 @@ class ApiService {
     }
   }
 
-  // ============================================================
-  // WISHLIST
-  // ============================================================
-
-  static Future<List<Product>> getWishlist(int userId) async {
+    // WISHLIST
+    static Future<List<Product>> getWishlist(int userId) async {
     try {
       final response = await http.get(
         Uri.parse('${ApiConfig.wishlistsEndpoint}?action=get_wishlist&user_id=$userId'),
@@ -427,11 +407,8 @@ class ApiService {
     }
   }
 
-  // ============================================================
-  // ANALYTICS (untuk dashboard admin)
-  // ============================================================
-
-  static Future<Map<String, dynamic>> getAnalytics() async {
+    // ANALYTICS (untuk dashboard admin)
+    static Future<Map<String, dynamic>> getAnalytics() async {
     try {
       final response = await http.get(Uri.parse(ApiConfig.analyticsEndpoint));
       final data = jsonDecode(response.body);
@@ -446,11 +423,8 @@ class ApiService {
     }
   }
 
-  // ============================================================
-  // BUNDLES (Paket Bundling Kue)
-  // ============================================================
-
-  static Future<List<Bundle>> getBundles() async {
+    // BUNDLES (Paket Bundling Kue)
+    static Future<List<Bundle>> getBundles() async {
     try {
       final response = await http.get(Uri.parse(ApiConfig.bundlesEndpoint));
       final data = jsonDecode(response.body);
@@ -552,6 +526,83 @@ class ApiService {
       return jsonDecode(response.body);
     } catch (e) {
       return {'success': false, 'message': 'Gagal menghapus produk dari bundling: $e'};
+    }
+  }
+
+    // CABANG (BRANCHES)
+    static Future<List<Branch>> getBranches({bool activeOnly = true}) async {
+    try {
+      final url = activeOnly
+          ? '${ApiConfig.branchesEndpoint}?active=1'
+          : ApiConfig.branchesEndpoint;
+      final response = await http.get(Uri.parse(url));
+      final data = jsonDecode(response.body);
+      if (data['success'] == true) {
+        return (data['data'] as List).map((b) => Branch.fromJson(b)).toList();
+      }
+      return [];
+    } catch (e) {
+      debugPrint('getBranches error: $e');
+      return [];
+    }
+  }
+
+  static Future<List<Branch>> getAllBranches() => getBranches(activeOnly: false);
+
+  static Future<Map<String, dynamic>> createBranch(Map<String, dynamic> data) async {
+    try {
+      final response = await http.post(
+        Uri.parse(ApiConfig.branchesEndpoint),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(data),
+      );
+      return jsonDecode(response.body);
+    } catch (e) {
+      return {'success': false, 'message': 'Gagal menambah cabang: $e'};
+    }
+  }
+
+  static Future<Map<String, dynamic>> updateBranch(Map<String, dynamic> data) async {
+    try {
+      final response = await http.put(
+        Uri.parse(ApiConfig.branchesEndpoint),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(data),
+      );
+      return jsonDecode(response.body);
+    } catch (e) {
+      return {'success': false, 'message': 'Gagal mengupdate cabang: $e'};
+    }
+  }
+
+  static Future<Map<String, dynamic>> deleteBranch(int id) async {
+    try {
+      final response = await http.delete(
+        Uri.parse('${ApiConfig.branchesEndpoint}?id=$id'),
+      );
+      return jsonDecode(response.body);
+    } catch (e) {
+      return {'success': false, 'message': 'Gagal menghapus cabang: $e'};
+    }
+  }
+
+    // UPLOAD GAMBAR
+    static Future<Map<String, dynamic>> uploadImage(String filePath) async {
+    try {
+      final request = http.MultipartRequest(
+        'POST',
+        Uri.parse(ApiConfig.uploadEndpoint),
+      );
+
+      request.files.add(await http.MultipartFile.fromPath('image', filePath));
+
+      final streamedResponse = await request.send();
+      final response = await http.Response.fromStream(streamedResponse);
+
+      return jsonDecode(response.body);
+    } catch (e) {
+      debugPrint('uploadImage error: $e');
+      return {'success': false, 'message': 'Gagal mengupload gambar: $e'};
     }
   }
 }

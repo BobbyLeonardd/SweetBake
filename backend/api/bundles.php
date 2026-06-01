@@ -40,9 +40,7 @@ try {
     echo json_encode(['success' => false, 'message' => 'Server error: ' . $e->getMessage()]);
 }
 
-// ============================================================
 // GET - Ambil semua bundles atau bundle by ID
-// ============================================================
 function handleGet($db) {
     $action = $_GET['action'] ?? null;
     
@@ -117,9 +115,7 @@ function handleGet($db) {
     }
 }
 
-// ============================================================
 // POST - Tambah bundle baru atau tambah item ke bundle
-// ============================================================
 function handlePost($db) {
     $action = $_GET['action'] ?? null;
     $data = json_decode(file_get_contents('php://input'), true);
@@ -193,9 +189,7 @@ function handlePost($db) {
     }
 }
 
-// ============================================================
 // PUT - Update bundle
-// ============================================================
 function handlePut($db) {
     $data = json_decode(file_get_contents('php://input'), true);
     
@@ -232,9 +226,7 @@ function handlePut($db) {
     }
 }
 
-// ============================================================
 // DELETE - Hapus bundle atau hapus item dari bundle
-// ============================================================
 function handleDelete($db) {
     $action = $_GET['action'] ?? null;
     

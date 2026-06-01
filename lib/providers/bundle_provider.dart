@@ -32,7 +32,6 @@ class BundleProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // Get bundle by id
   Future<Bundle?> getBundleById(int id) async {
     try {
       return await ApiService.getBundle(id);
@@ -60,7 +59,6 @@ class BundleProvider with ChangeNotifier {
     return result;
   }
 
-  // Update bundle (admin)
   Future<Map<String, dynamic>> updateBundle(int id, Map<String, dynamic> bundleData) async {
     _isLoading = true;
     notifyListeners();
@@ -94,7 +92,6 @@ class BundleProvider with ChangeNotifier {
     return result;
   }
 
-  // Add item to bundle (admin)
   Future<Map<String, dynamic>> addBundleItem(int bundleId, int productId, int quantity) async {
     final result = await ApiService.addBundleItem(bundleId, productId, quantity);
 
@@ -105,7 +102,6 @@ class BundleProvider with ChangeNotifier {
     return result;
   }
 
-  // Remove item from bundle (admin)
   Future<Map<String, dynamic>> removeBundleItem(int bundleItemId) async {
     final result = await ApiService.removeBundleItem(bundleItemId);
 

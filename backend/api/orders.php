@@ -87,8 +87,8 @@ if ($method == 'POST') {
         // bikin nomor resi
         $orderNumber = 'SB' . date('Ymd') . rand(1000, 9999);
         
-        $query = "INSERT INTO orders (customer_id, order_number, total_amount, shipping_cost, shipping_address, shipping_city, notes) 
-                  VALUES (:customer_id, :order_number, :total_amount, :shipping_cost, :shipping_address, :shipping_city, :notes)";
+        $query = "INSERT INTO orders (customer_id, order_number, total_amount, shipping_cost, shipping_address, shipping_city, branch_id, branch_name, delivery_method, payment_method, notes) 
+                  VALUES (:customer_id, :order_number, :total_amount, :shipping_cost, :shipping_address, :shipping_city, :branch_id, :branch_name, :delivery_method, :payment_method, :notes)";
         $stmt = $db->prepare($query);
         
         $stmt->bindParam(":customer_id", $data->customer_id);
@@ -97,29 +97,79 @@ if ($method == 'POST') {
         $stmt->bindParam(":shipping_cost", $data->shipping_cost);
         $stmt->bindParam(":shipping_address", $data->shipping_address);
         $stmt->bindParam(":shipping_city", $data->shipping_city);
+        $branchId       = $data->branch_id      ?? null;
+        $branchName     = $data->branch_name    ?? null;
+        $deliveryMethod = $data->delivery_method ?? 'delivery';
+        $paymentMethod  = $data->payment_method  ?? 'cash';
+        $stmt->bindParam(":branch_id",       $branchId);
+        $stmt->bindParam(":branch_name",     $branchName);
+        $stmt->bindParam(":delivery_method", $deliveryMethod);
+        $stmt->bindParam(":payment_method",  $paymentMethod);
         $stmt->bindParam(":notes", $data->notes);
         
         $stmt->execute();
         $orderId = $db->lastInsertId();
         
         foreach ($data->items as $item) {
-            $itemQuery = "INSERT INTO order_items (order_id, product_id, quantity, price, subtotal) 
-                          VALUES (:order_id, :product_id, :quantity, :price, :subtotal)";
-            $itemStmt = $db->prepare($itemQuery);
-            
-            $itemStmt->bindParam(":order_id", $orderId);
-            $itemStmt->bindParam(":product_id", $item->product_id);
-            $itemStmt->bindParam(":quantity", $item->quantity);
-            $itemStmt->bindParam(":price", $item->price);
-            $itemStmt->bindParam(":subtotal", $item->subtotal);
-            $itemStmt->execute();
-            
-            // kurangi stok produk
-            $updateStock = "UPDATE products SET stock = stock - :quantity WHERE id = :product_id";
-            $updateStmt = $db->prepare($updateStock);
-            $updateStmt->bindParam(":quantity", $item->quantity);
-            $updateStmt->bindParam(":product_id", $item->product_id);
-            $updateStmt->execute();
+            $itemType = isset($item->type) ? $item->type : 'product';
+
+            if ($itemType === 'bundle') {
+                // Expand bundle → ambil produk-produk dari bundle_items
+                $bundleQty = (int)$item->quantity;
+                $bundleQuery = "SELECT bi.product_id, bi.quantity AS item_qty, p.price AS product_price
+                                FROM bundle_items bi
+                                JOIN products p ON bi.product_id = p.id
+                                WHERE bi.bundle_id = :bundle_id";
+                $bStmt = $db->prepare($bundleQuery);
+                $bStmt->bindParam(":bundle_id", $item->bundle_id);
+                $bStmt->execute();
+                $bundleProducts = $bStmt->fetchAll(PDO::FETCH_ASSOC);
+
+                foreach ($bundleProducts as $bp) {
+                    $actualQty     = (int)$bp['item_qty'] * $bundleQty;
+                    $productPrice  = (float)$bp['product_price'];
+                    $productSub    = $productPrice * $actualQty;
+                    $productId     = (int)$bp['product_id'];
+
+                    $iStmt = $db->prepare(
+                        "INSERT INTO order_items (order_id, product_id, quantity, price, subtotal)
+                         VALUES (:order_id, :product_id, :quantity, :price, :subtotal)"
+                    );
+                    $iStmt->bindParam(":order_id",   $orderId);
+                    $iStmt->bindParam(":product_id", $productId);
+                    $iStmt->bindParam(":quantity",   $actualQty);
+                    $iStmt->bindParam(":price",      $productPrice);
+                    $iStmt->bindParam(":subtotal",   $productSub);
+                    $iStmt->execute();
+
+                    // Kurangi stok setiap produk dalam bundle
+                    $uStmt = $db->prepare(
+                        "UPDATE products SET stock = stock - :qty WHERE id = :pid"
+                    );
+                    $uStmt->bindParam(":qty", $actualQty);
+                    $uStmt->bindParam(":pid", $productId);
+                    $uStmt->execute();
+                }
+            } else {
+                // Produk biasa
+                $itemQuery = "INSERT INTO order_items (order_id, product_id, quantity, price, subtotal) 
+                              VALUES (:order_id, :product_id, :quantity, :price, :subtotal)";
+                $itemStmt = $db->prepare($itemQuery);
+
+                $itemStmt->bindParam(":order_id",   $orderId);
+                $itemStmt->bindParam(":product_id", $item->product_id);
+                $itemStmt->bindParam(":quantity",   $item->quantity);
+                $itemStmt->bindParam(":price",      $item->price);
+                $itemStmt->bindParam(":subtotal",   $item->subtotal);
+                $itemStmt->execute();
+
+                // Kurangi stok produk
+                $updateStock = "UPDATE products SET stock = stock - :quantity WHERE id = :product_id";
+                $updateStmt  = $db->prepare($updateStock);
+                $updateStmt->bindParam(":quantity",   $item->quantity);
+                $updateStmt->bindParam(":product_id", $item->product_id);
+                $updateStmt->execute();
+            }
         }
         
         $trackQuery = "INSERT INTO order_tracking (order_id, status, description) 

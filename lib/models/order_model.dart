@@ -10,6 +10,9 @@ class Order {
   final String paymentStatus;
   final String? notes;
   final String? customerName;
+  final String? branchName;
+  final String? deliveryMethod;
+  final String? paymentMethod;
   final List<OrderItem>? items;
   final List<OrderTracking>? tracking;
   final DateTime createdAt;
@@ -26,6 +29,9 @@ class Order {
     this.paymentStatus = 'unpaid',
     this.notes,
     this.customerName,
+    this.branchName,
+    this.deliveryMethod,
+    this.paymentMethod,
     this.items,
     this.tracking,
     required this.createdAt,
@@ -44,6 +50,9 @@ class Order {
       paymentStatus: json['payment_status'] ?? 'unpaid',
       notes: json['notes'],
       customerName: json['customer_name'],
+      branchName: json['branch_name'],
+      deliveryMethod: json['delivery_method'],
+      paymentMethod: json['payment_method'],
       items: json['items'] != null
           ? (json['items'] as List).map((i) => OrderItem.fromJson(i)).toList()
           : null,

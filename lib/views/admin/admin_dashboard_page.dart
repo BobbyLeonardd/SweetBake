@@ -10,7 +10,9 @@ import 'admin_customers_page.dart';
 import 'admin_categories_page.dart';
 import 'admin_shipping_page.dart';
 import 'admin_bundles_page.dart';
+import 'admin_branches_page.dart';
 import '../auth/login_page.dart';
+import '../about_page.dart';
 import '../../services/api_service.dart';
 import '../../utils/currency_formatter.dart';
 
@@ -322,6 +324,34 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (_) => const AdminBundlesPage(),
+                        ),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  _MenuCard(
+                    title: 'Kelola Cabang',
+                    subtitle: 'Tambah dan atur cabang toko untuk layanan pengiriman',
+                    icon: Icons.storefront_rounded,
+                    color: Colors.deepPurple.shade500,
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => const AdminBranchesPage(),
+                        ),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  _MenuCard(
+                    title: 'Tentang Aplikasi',
+                    subtitle: 'Informasi aplikasi dan tim developer SweetBake',
+                    icon: Icons.info_outline_rounded,
+                    color: Colors.blueGrey.shade500,
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => const AboutPage(),
                         ),
                       );
                     },

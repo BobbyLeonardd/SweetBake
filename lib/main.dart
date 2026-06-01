@@ -11,6 +11,7 @@ import 'providers/customer_provider.dart';
 import 'providers/category_provider.dart';
 import 'providers/wishlist_provider.dart';
 import 'providers/bundle_provider.dart';
+import 'providers/branch_provider.dart';
 import 'views/auth/login_page.dart';
 import 'views/admin/admin_dashboard_page.dart';
 import 'views/customer/customer_home_page.dart';
@@ -42,6 +43,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => CategoryProvider()),
         ChangeNotifierProvider(create: (_) => WishlistProvider()),
         ChangeNotifierProvider(create: (_) => BundleProvider()),
+        ChangeNotifierProvider(create: (_) => BranchProvider()),
       ],
       child: MaterialApp(
         title: 'SweetBake',

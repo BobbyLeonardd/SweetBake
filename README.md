@@ -17,10 +17,21 @@ SweetBake adalah aplikasi mobile e-commerce untuk toko kue yang dibangun dengan 
 - **Mixed Cart** - Checkout produk dan bundle sekaligus dalam satu transaksi
 - **Real-time Order Tracking** - Customer bisa tracking status pesanan secara real-time
 - **Wishlist** - Simpan produk favorit untuk dibeli nanti
+- **Kelola Cabang** - Admin bisa atur cabang toko, customer pilih diantar atau ambil sendiri (ongkir gratis!)
+- **Konfirmasi Pembayaran** - Customer bisa konfirmasi sudah bayar langsung dari halaman detail pesanan
+- **Validasi Stok** - Sistem cek stok produk sebelum checkout agar tidak terjadi pesanan kosong
 
 ## Screenshot
 
-<!-- Tambahkan screenshot aplikasi kamu di sini -->
+> 📸 **Cara tambah screenshot:** Jalankan app di emulator, screenshot layar, lalu simpan di folder `assets/screenshots/` dan embed di sini.
+
+| Halaman | Preview |
+|---------|----------|
+| Login | *(screenshot_login.png)* |
+| Beranda Customer | *(screenshot_home.png)* |
+| Detail Produk | *(screenshot_product.png)* |
+| Keranjang | *(screenshot_cart.png)* |
+| Admin Dashboard | *(screenshot_admin.png)* |
 
 ## Tech Stack
 
@@ -49,6 +60,7 @@ SweetBake adalah aplikasi mobile e-commerce untuk toko kue yang dibangun dengan 
 - Manajemen pesanan dengan update status
 - Kelola ongkos kirim per kota
 - Manajemen data pelanggan
+- **Kelola cabang toko** (aktif/nonaktif, biaya pengiriman per cabang)
 
 ### Customer App
 - Registrasi dan login
@@ -56,7 +68,9 @@ SweetBake adalah aplikasi mobile e-commerce untuk toko kue yang dibangun dengan 
 - Detail produk dengan wishlist
 - Keranjang belanja (persistent)
 - Tambah bundling ke keranjang
-- Checkout dengan kalkulasi ongkir otomatis
+- Checkout: **Diantar** (kalkulasi ongkir otomatis) atau **Ambil di Cabang** (ongkir gratis)
+- **Validasi stok** sebelum checkout
+- **Konfirmasi pembayaran** dari halaman detail pesanan
 - Riwayat pesanan dengan tracking
 - Profil pengguna
 
@@ -124,7 +138,7 @@ flutter run -d chrome    # Web browser
 
 ## Database Schema
 
-Aplikasi menggunakan 10 tabel:
+Aplikasi menggunakan 11 tabel:
 - `users` - Akun admin dan customer
 - `products` - Katalog produk kue
 - `categories` - Kategori produk

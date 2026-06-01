@@ -55,7 +55,6 @@ class AuthProvider with ChangeNotifier {
     return result;
   }
 
-  // Update profile
   Future<Map<String, dynamic>> updateProfile(Map<String, dynamic> data) async {
     _isLoading = true;
     notifyListeners();

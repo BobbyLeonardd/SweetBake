@@ -8,6 +8,18 @@ import '../../utils/currency_formatter.dart';
 import '../../utils/date_formatter.dart';
 import '../../widgets/loading_widget.dart';
 
+String _paymentMethodLabel(String method) {
+  const labels = {
+    'qris': 'QRIS',
+    'transfer_bank': 'Transfer Bank',
+    'cash': 'Cash / Tunai',
+    'debit': 'Kartu Debit',
+    'kredit': 'Kartu Kredit',
+    'cod': 'COD',
+  };
+  return labels[method] ?? method;
+}
+
 class OrderDetailPage extends StatefulWidget {
   final int orderId;
 
@@ -123,14 +135,57 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  if (_order!.branchName != null) ...[
+                    Text('Cabang', style: ThemeConfig.bodySmall),
+                    Text(_order!.branchName!, style: ThemeConfig.bodyMedium
+                        .copyWith(fontWeight: FontWeight.w600)),
+                    const SizedBox(height: 8),
+                  ],
+                  Text('Metode', style: ThemeConfig.bodySmall),
+                  Row(children: [
+                    Icon(
+                      _order!.deliveryMethod == 'pickup'
+                          ? Icons.storefront_rounded
+                          : Icons.delivery_dining_rounded,
+                      size: 16,
+                      color: ThemeConfig.primaryColor,
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      _order!.deliveryMethod == 'pickup'
+                          ? 'Ambil Sendiri'
+                          : 'Diantar',
+                      style: ThemeConfig.bodyMedium
+                          .copyWith(fontWeight: FontWeight.w600),
+                    ),
+                  ]),
+                  const SizedBox(height: 8),
                   Text('Alamat', style: ThemeConfig.bodySmall),
                   Text(_order!.shippingAddress),
                   const SizedBox(height: 8),
-                  Text('Kota', style: ThemeConfig.bodySmall),
-                  Text(_order!.shippingCity ?? '-'),
-                  const SizedBox(height: 8),
                   Text('Ongkir', style: ThemeConfig.bodySmall),
-                  Text(CurrencyFormatter.format(_order!.shippingCost)),
+                  Text(
+                    _order!.shippingCost == 0
+                        ? 'Gratis'
+                        : CurrencyFormatter.format(_order!.shippingCost),
+                    style: ThemeConfig.bodyMedium.copyWith(
+                      color: _order!.shippingCost == 0
+                          ? ThemeConfig.successColor
+                          : null,
+                      fontWeight: _order!.shippingCost == 0
+                          ? FontWeight.w600
+                          : null,
+                    ),
+                  ),
+                  if (_order!.paymentMethod != null) ...[  
+                    const SizedBox(height: 8),
+                    Text('Metode Pembayaran', style: ThemeConfig.bodySmall),
+                    Text(
+                      _paymentMethodLabel(_order!.paymentMethod!),
+                      style: ThemeConfig.bodyMedium
+                          .copyWith(fontWeight: FontWeight.w600),
+                    ),
+                  ],
                 ],
               ),
             ),
@@ -235,6 +290,68 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
             ),
           ),
           const SizedBox(height: 24),
+
+          // tombol konfirmasi pembayaran (hanya jika status bukan cancelled/delivered dan payment belum paid)
+          if (_order!.paymentStatus == 'unpaid' &&
+              _order!.status != 'cancelled' &&
+              _order!.status != 'delivered') ...[
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                icon: const Icon(Icons.check_circle_outline_rounded),
+                label: const Text('SUDAH BAYAR', style: TextStyle(fontWeight: FontWeight.bold)),
+                onPressed: () {
+                  showDialog<bool>(
+                    context: context,
+                    builder: (dialogContext) => AlertDialog(
+                      title: const Text('Konfirmasi Pembayaran'),
+                      content: const Text('Apakah Anda sudah melakukan pembayaran? Admin akan memverifikasi pembayaran Anda.'),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(dialogContext, false),
+                          child: const Text('Belum'),
+                        ),
+                        TextButton(
+                          onPressed: () async {
+                            Navigator.pop(dialogContext, true);
+                            setState(() => _isLoading = true);
+                            final orderProvider = Provider.of<OrderProvider>(context, listen: false);
+                            final result = await orderProvider.updateOrderStatus(
+                              _order!.id,
+                              _order!.status,
+                              'Customer konfirmasi sudah bayar - menunggu verifikasi admin',
+                            );
+                            if (context.mounted) {
+                              if (result['success']) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Konfirmasi pembayaran terkirim! Admin akan memverifikasi.'),
+                                    backgroundColor: ThemeConfig.successColor,
+                                  ),
+                                );
+                                _loadOrder();
+                              } else {
+                                setState(() => _isLoading = false);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text(result['message'] ?? 'Gagal mengirim konfirmasi')),
+                                );
+                              }
+                            }
+                          },
+                          child: const Text('Ya, Sudah Bayar'),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: ThemeConfig.successColor,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
+          ],
 
           // tombol cancel
           if (_order!.status == 'pending')

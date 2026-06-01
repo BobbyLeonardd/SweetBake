@@ -244,7 +244,6 @@ class BundleDetailPage extends StatelessWidget {
         ],
       ),
 
-      // Add to cart button
       bottomNavigationBar: Consumer<CartProvider>(
         builder: (context, cartProvider, child) {
           final isInCart = cartProvider.isBundleInCart(bundle.id);
@@ -295,7 +294,6 @@ class BundleDetailPage extends StatelessWidget {
                       ),
                     ),
 
-                  // Add to cart button
                   ElevatedButton(
                     onPressed: bundle.isAvailable
                         ? () {

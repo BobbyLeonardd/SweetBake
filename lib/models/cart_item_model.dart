@@ -38,25 +38,18 @@ class CartItem {
     );
   }
 
-  // Get ID (product atau bundle)
   int get id => type == CartItemType.product ? product!.id : bundle!.id;
 
-  // Get name
   String get name => type == CartItemType.product ? product!.name : bundle!.name;
 
-  // Get price per item
   double get price => type == CartItemType.product ? product!.price : bundle!.promoPrice;
 
-  // Get image URL
   String? get imageUrl => type == CartItemType.product ? product!.imageUrl : bundle!.imageUrl;
 
-  // Get subtotal
   double get subtotal => price * quantity;
 
-  // Check if product (for backward compatibility)
   bool get isProduct => type == CartItemType.product;
 
-  // Check if bundle
   bool get isBundle => type == CartItemType.bundle;
 
   // untuk kirim ke API (tanpa data lengkap)

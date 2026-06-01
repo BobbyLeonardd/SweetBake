@@ -20,7 +20,6 @@ class OrderProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // Get order by id
   Future<Order?> getOrder(int id) async {
     return await ApiService.getOrder(id);
   }
@@ -38,7 +37,6 @@ class OrderProvider with ChangeNotifier {
     return result;
   }
 
-  // Update order status (Admin)
   Future<Map<String, dynamic>> updateOrderStatus(
     int orderId,
     String status,
@@ -53,7 +51,6 @@ class OrderProvider with ChangeNotifier {
     return result;
   }
 
-  // Get orders by status
   List<Order> getOrdersByStatus(String status) {
     return _orders.where((o) => o.status == status).toList();
   }

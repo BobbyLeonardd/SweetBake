@@ -45,7 +45,6 @@ class ProductProvider with ChangeNotifier {
     }
   }
 
-  // Get products by category
   List<Product> getProductsByCategory(int categoryId) {
     return _products.where((p) => p.categoryId == categoryId).toList();
   }
@@ -71,7 +70,6 @@ class ProductProvider with ChangeNotifier {
     return result;
   }
 
-  // Update product (Admin)
   Future<Map<String, dynamic>> updateProduct(Map<String, dynamic> productData) async {
     final result = await ApiService.updateProduct(productData);
 

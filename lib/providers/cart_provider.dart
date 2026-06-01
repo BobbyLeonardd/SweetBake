@@ -12,12 +12,10 @@ class CartProvider with ChangeNotifier {
   List<CartItem> get items => _items;
   int get itemCount => _items.length;
 
-  // Get product items only
   List<CartItem> get productItems {
     return _items.where((item) => item.isProduct).toList();
   }
 
-  // Get bundle items only
   List<CartItem> get bundleItems {
     return _items.where((item) => item.isBundle).toList();
   }
@@ -53,7 +51,6 @@ class CartProvider with ChangeNotifier {
     }
   }
 
-  // Add product to cart
   void addToCart(Product product, {int quantity = 1}) {
     final existingIndex = _items.indexWhere(
       (item) => item.isProduct && item.product!.id == product.id,
@@ -69,7 +66,6 @@ class CartProvider with ChangeNotifier {
     _saveCart();
   }
 
-  // Add bundle to cart
   void addBundleToCart(Bundle bundle, {int quantity = 1}) {
     final existingIndex = _items.indexWhere(
       (item) => item.isBundle && item.bundle!.id == bundle.id,
@@ -85,24 +81,20 @@ class CartProvider with ChangeNotifier {
     _saveCart();
   }
 
-  // Remove from cart (support both product and bundle)
   void removeFromCart(int id, CartItemType type) {
     _items.removeWhere((item) => item.type == type && item.id == id);
     notifyListeners();
     _saveCart();
   }
 
-  // Remove product from cart (backward compatibility)
   void removeProductFromCart(int productId) {
     removeFromCart(productId, CartItemType.product);
   }
 
-  // Remove bundle from cart
   void removeBundleFromCart(int bundleId) {
     removeFromCart(bundleId, CartItemType.bundle);
   }
 
-  // Update quantity (support both product and bundle)
   void updateQuantity(int id, CartItemType type, int quantity) {
     final index = _items.indexWhere((item) => item.type == type && item.id == id);
 
@@ -117,14 +109,12 @@ class CartProvider with ChangeNotifier {
     }
   }
 
-  // Clear cart (setelah checkout, hapus juga dari storage)
   void clearCart() {
     _items.clear();
     notifyListeners();
     _saveCart();
   }
 
-  // Get cart item by id and type
   CartItem? getCartItem(int id, CartItemType type) {
     try {
       return _items.firstWhere((item) => item.type == type && item.id == id);
@@ -133,27 +123,22 @@ class CartProvider with ChangeNotifier {
     }
   }
 
-  // Get cart item by product id (backward compatibility)
   CartItem? getCartItemByProductId(int productId) {
     return getCartItem(productId, CartItemType.product);
   }
 
-  // Get cart item by bundle id
   CartItem? getCartItemByBundleId(int bundleId) {
     return getCartItem(bundleId, CartItemType.bundle);
   }
 
-  // Check if product is in cart
   bool isInCart(int productId) {
     return _items.any((item) => item.isProduct && item.product!.id == productId);
   }
 
-  // Check if bundle is in cart
   bool isBundleInCart(int bundleId) {
     return _items.any((item) => item.isBundle && item.bundle!.id == bundleId);
   }
 
-  // Get quantity in cart
   int getQuantityInCart(int id, CartItemType type) {
     final item = getCartItem(id, type);
     return item?.quantity ?? 0;
