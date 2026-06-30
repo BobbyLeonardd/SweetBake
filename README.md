@@ -86,7 +86,7 @@ SweetBake adalah aplikasi mobile e-commerce untuk toko kue yang dibangun dengan 
 
 1. **Clone repository**
 ```bash
-git clone https://github.com/username/sweetbake.git
+git clone https://github.com/BobbyLeonardd/SweetBake.git
 cd sweetbake
 ```
 
