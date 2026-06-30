@@ -1,215 +1,98 @@
-# SweetBake - Cake Shop Management System
+# SweetBake
 
-> Full-stack mobile application untuk manajemen toko kue dengan fitur bundling dan persistent cart
+SweetBake adalah aplikasi mobile e-commerce manajemen toko kue. Proyek ini menggunakan Flutter untuk frontend dan PHP (Native) + MySQL untuk backend REST API.
 
-![Flutter](https://img.shields.io/badge/Flutter-3.0+-02569B?logo=flutter)
-![PHP](https://img.shields.io/badge/PHP-8.0+-777BB4?logo=php)
-![MySQL](https://img.shields.io/badge/MySQL-8.0+-4479A1?logo=mysql)
-
-## Tentang Proyek
-
-SweetBake adalah aplikasi mobile e-commerce untuk toko kue yang dibangun dengan Flutter (frontend) dan PHP + MySQL (backend). Aplikasi ini dibuat sebagai tugas akhir mata kuliah Pemrograman Mobile dengan fokus pada user experience dan fitur-fitur modern seperti persistent cart dan bundle pricing.
-
-### Fitur Unggulan
-
-- **Paket Bundling** - Admin bisa bikin paket kue dengan harga promo, customer bisa beli dalam satu paket
-- **Persistent Cart** - Keranjang belanja tersimpan otomatis walau app ditutup
-- **Mixed Cart** - Checkout produk dan bundle sekaligus dalam satu transaksi
-- **Real-time Order Tracking** - Customer bisa tracking status pesanan secara real-time
-- **Wishlist** - Simpan produk favorit untuk dibeli nanti
-- **Kelola Cabang** - Admin bisa atur cabang toko, customer pilih diantar atau ambil sendiri (ongkir gratis!)
-- **Konfirmasi Pembayaran** - Customer bisa konfirmasi sudah bayar langsung dari halaman detail pesanan
-- **Validasi Stok** - Sistem cek stok produk sebelum checkout agar tidak terjadi pesanan kosong
-
-## Screenshot
-
-> 📸 **Cara tambah screenshot:** Jalankan app di emulator, screenshot layar, lalu simpan di folder `assets/screenshots/` dan embed di sini.
-
-| Halaman | Preview |
-|---------|----------|
-| Login | *(screenshot_login.png)* |
-| Beranda Customer | *(screenshot_home.png)* |
-| Detail Produk | *(screenshot_product.png)* |
-| Keranjang | *(screenshot_cart.png)* |
-| Admin Dashboard | *(screenshot_admin.png)* |
+Proyek ini awalnya dikembangkan untuk memenuhi tugas akhir mata kuliah Pemrograman Mobile, dengan implementasi fitur e-commerce dasar seperti keranjang belanja persisten, paket bundling, dan manajemen pesanan.
 
 ## Tech Stack
 
 **Frontend:**
-- Flutter 3.0+ (Dart)
+- Flutter SDK (>= 3.0.0)
 - Provider (State Management)
 - SharedPreferences (Local Storage)
-- Cached Network Image
-- Google Fonts
+- HTTP (API consumption)
 
 **Backend:**
-- PHP 8.0+ dengan PDO
+- PHP 8.0+ (PDO)
 - MySQL 8.0+
-- RESTful API
-- CORS enabled
 
-**Server:**
-- Laragon / XAMPP
+## Fitur Utama
 
-## Fitur Lengkap
+- **Product Bundling:** Dukungan untuk produk paket dengan harga khusus.
+- **Persistent Cart:** Data keranjang belanja disimpan di local storage (tidak hilang saat aplikasi ditutup).
+- **Order Management:** Sistem tracking pesanan dan update status sederhana.
+- **Store Branches:** Manajemen cabang toko dengan kalkulasi ongkos kirim dinamis (termasuk opsi ambil di toko/pickup).
+- **Stock Validation:** Pengecekan ketersediaan stok sebelum proses checkout.
 
-### Admin Panel
-- Dashboard dengan statistik real-time (pendapatan, pesanan, pelanggan)
-- CRUD produk dan kategori
-- Kelola paket bundling dengan harga promo
-- Manajemen pesanan dengan update status
-- Kelola ongkos kirim per kota
-- Manajemen data pelanggan
-- **Kelola cabang toko** (aktif/nonaktif, biaya pengiriman per cabang)
+## Instalasi & Setup
 
-### Customer App
-- Registrasi dan login
-- Browse produk dengan search dan filter kategori
-- Detail produk dengan wishlist
-- Keranjang belanja (persistent)
-- Tambah bundling ke keranjang
-- Checkout: **Diantar** (kalkulasi ongkir otomatis) atau **Ambil di Cabang** (ongkir gratis)
-- **Validasi stok** sebelum checkout
-- **Konfirmasi pembayaran** dari halaman detail pesanan
-- Riwayat pesanan dengan tracking
-- Profil pengguna
-
-## Instalasi
-
-### Prerequisites
+### Prasyarat
 - Flutter SDK 3.0+
-- Laragon atau XAMPP
-- Android Studio / VS Code
-- Emulator Android atau device fisik
+- Web Server lokal (Laragon / XAMPP)
+- MySQL Database
 
-### Quick Start
+### Langkah Instalasi
 
 1. **Clone repository**
-```bash
-git clone https://github.com/BobbyLeonardd/SweetBake.git
-cd sweetbake
-```
+   ```bash
+   git clone https://github.com/BobbyLeonardd/SweetBake.git
+   cd sweetbake
+   ```
 
 2. **Setup Database**
-- Buka Laragon → Start All
-- Buka phpMyAdmin: `http://localhost/phpmyadmin`
-- Import file `backend/database/sweetbake.sql`
+   - Jalankan MySQL server.
+   - Buat database baru (misal: `sweetbake`).
+   - Import file skema database dari `backend/database/sweetbake.sql`.
 
 3. **Setup Backend**
-- Copy folder `backend` ke `C:\laragon\www\sweetbake\backend\`
-- Test API: `http://localhost/sweetbake/backend/api/products.php`
+   - Pindahkan folder `backend` ke direktori root server lokal (contoh di Laragon: `C:\laragon\www\sweetbake\backend`).
+   - Konfigurasi default database menggunakan user `root` tanpa password. Sesuaikan kredensial di `backend/config/database.php` jika environment kamu berbeda.
 
-4. **Setup Flutter**
-```bash
-flutter pub get
+4. **Setup Frontend**
+   - Install dependencies Flutter:
+     ```bash
+     flutter pub get
+     ```
+   - Sesuaikan konfigurasi URL API di `lib/config/api_config.dart`. Default diset untuk emulator Android:
+     ```dart
+     static const String baseUrl = 'http://10.0.2.2/sweetbake/backend/api';
+     ```
+     *(Ganti dengan IP lokal kamu jika menggunakan real device, atau `localhost` jika dijalankan di Windows/Web).*
+
+5. **Jalankan Aplikasi**
+   ```bash
+   flutter run
+   ```
+
+### Akun Demo (Testing)
+- **Admin:** `admin@sweetbake.com` / `password`
+- **Customer:** Buat akun baru via menu register di aplikasi.
+
+## Struktur Direktori
+
+```text
+sweetbake/
+├── lib/
+│   ├── config/          # Konfigurasi API dan tema
+│   ├── models/          # Model data (DTOs)
+│   ├── providers/       # State management logic
+│   ├── services/        # HTTP client & service layer
+│   ├── views/           # UI Screens (admin/customer/auth)
+│   └── widgets/         # Komponen UI reusable
+├── backend/
+│   ├── api/             # Endpoint REST API (auth.php, products.php, dll)
+│   ├── config/          # Konfigurasi koneksi database
+│   └── database/        # Skema SQL
+└── README.md
 ```
 
-5. **Konfigurasi API**
+## Dokumentasi Internal
 
-Edit `lib/config/api_config.dart`:
-```dart
-// Emulator Android
-static const String baseUrl = 'http://10.0.2.2/sweetbake/backend/api';
-
-// Device fisik (ganti dengan IP komputer kamu)
-static const String baseUrl = 'http://192.168.x.x/sweetbake/backend/api';
-
-// Windows/Web
-static const String baseUrl = 'http://localhost/sweetbake/backend/api';
-```
-
-6. **Run aplikasi**
-```bash
-flutter run              # auto-detect device
-flutter run -d windows   # Windows desktop
-flutter run -d chrome    # Web browser
-```
-
-### Demo Account
-
-- **Admin:** admin@sweetbake.com / password
-- **Customer:** Daftar sendiri di aplikasi
-
-## Dokumentasi
-
+Referensi dokumen tambahan terkait pengembangan proyek:
 - [Panduan Instalasi Lengkap](PANDUAN_INSTALL_KELOMPOK.md)
 - [Dokumentasi Fitur Bundling](BUNDLING.md)
 - [Panduan Presentasi](Panduan_Presentasi_Kelompok.md)
 
-## Database Schema
+## Lisensi
 
-Aplikasi menggunakan 11 tabel:
-- `users` - Akun admin dan customer
-- `products` - Katalog produk kue
-- `categories` - Kategori produk
-- `orders` - Data pesanan
-- `order_items` - Detail item dalam pesanan
-- `order_tracking` - Riwayat status pesanan
-- `shipping_costs` - Ongkos kirim per kota
-- `wishlists` - Produk favorit
-- `bundles` - Paket bundling
-- `bundle_items` - Produk dalam paket
-
-## API Endpoints
-
-```
-POST   /auth.php                    - Login & Register
-GET    /products.php                - Get all products
-POST   /products.php                - Create product
-PUT    /products.php                - Update product
-DELETE /products.php?id={id}        - Delete product
-GET    /orders.php                  - Get all orders
-POST   /orders.php                  - Create order
-GET    /bundles.php                 - Get all bundles
-POST   /bundles.php                 - Create bundle
-...dan lainnya
-```
-
-## Struktur Project
-
-```
-sweetbake/
-├── lib/
-│   ├── config/          # API & theme config
-│   ├── models/          # Data models
-│   ├── providers/       # State management
-│   ├── services/        # API services
-│   ├── views/           # UI screens
-│   │   ├── admin/       # Admin pages
-│   │   ├── customer/    # Customer pages
-│   │   └── auth/        # Login & register
-│   └── widgets/         # Reusable widgets
-├── backend/
-│   ├── api/             # REST API endpoints
-│   ├── config/          # Database config
-│   └── database/        # SQL files
-└── README.md
-```
-
-## Kontribusi
-
-Proyek ini dibuat untuk tugas akhir mata kuliah. Jika kamu tertarik untuk berkontribusi atau punya saran, silakan buat issue atau pull request.
-
-## License
-
-[MIT License](LICENSE)
-
-## Tim Pengembang
-
-- **Izzul** - Backend & Database
-- **Linda** - Admin Panel & Product Management
-- **Aul** - Customer UI/UX
-- **Dilla** - Cart & Checkout
-- **Miya** - Order Management & Analytics
-
-## Acknowledgments
-
-- Terima kasih kepada dosen pembimbing
-- Flutter & Dart community
-- Stack Overflow untuk troubleshooting
-
----
-
-⭐ Jangan lupa kasih star kalau proyek ini bermanfaat!
-
-Dibuat dengan ❤️ menggunakan Flutter & PHP
+Proyek ini didistribusikan di bawah [MIT License](LICENSE).
