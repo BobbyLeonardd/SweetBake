@@ -35,7 +35,7 @@ class CartProvider with ChangeNotifier {
         notifyListeners();
       }
     } catch (e) {
-      print('Error loading cart: $e');
+      debugPrint('Error loading cart: $e');
     }
   }
 
@@ -45,7 +45,7 @@ class CartProvider with ChangeNotifier {
       final encoded = jsonEncode(_items.map((e) => e.toJsonFull()).toList());
       await prefs.setString(_cartKey, encoded);
     } catch (e) {
-      print('Error saving cart: $e');
+      debugPrint('Error saving cart: $e');
     }
   }
 
