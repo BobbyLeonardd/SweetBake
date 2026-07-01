@@ -115,12 +115,13 @@ Highlight Fitur Baru:
 1. Login admin → Dashboard
 2. Scroll ke bawah → Klik "Kelola Paket Bundling"
 3. Tampilkan 4 paket sample
-4. Klik "Tambah Paket" → Isi form:
+4. Klik "Tambah Paket" → Isi form di halaman baru:
    - Nama: "Paket Demo Presentasi"
    - Harga Normal: 200000
    - Harga Promo: 150000
+   - Gambar: Pilih tab "URL" atau "Lokal" dan masukkan gambar
 5. Simpan → Paket muncul di list
-6. Klik menu ⋮ → "Kelola Produk"
+6. Klik menu ⋮ pada paket baru → "Kelola Produk"
 7. Tambah 2-3 produk ke paket
 8. Kembali ke list bundling
 

@@ -193,14 +193,7 @@ class AboutPage extends StatelessWidget {
                             height: 1.6,
                           ),
                         ),
-                        const SizedBox(height: 10),
-                        Text(
-                          'Dibangun dengan Flutter & PHP sebagai tugas akhir mata kuliah Pemrograman Mobile.',
-                          style: ThemeConfig.bodyMedium.copyWith(
-                            color: ThemeConfig.textSecondaryColor,
-                            height: 1.6,
-                          ),
-                        ),
+
                       ],
                     ),
                   ),

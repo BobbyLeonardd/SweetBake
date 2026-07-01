@@ -571,12 +571,6 @@ TEST FITUR BUNDLING:
 
 ---
 
-## 📚 Dokumentasi Tambahan
-
-Untuk informasi lebih detail tentang fitur bundling, baca file:
-- `BUNDLING_FEATURE.md` - Dokumentasi lengkap fitur bundling
-- `QUICK_TEST_GUIDE.md` - Panduan test cepat
-- `SETUP_COMPLETE.md` - Status setup dan verifikasi
 
 ---
 

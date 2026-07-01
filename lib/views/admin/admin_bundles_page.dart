@@ -7,6 +7,7 @@ import '../../utils/currency_formatter.dart';
 import '../../widgets/loading_widget.dart';
 import '../../widgets/empty_state_widget.dart';
 import 'admin_bundle_items_page.dart';
+import 'bundle_form_page.dart';
 
 class AdminBundlesPage extends StatefulWidget {
   const AdminBundlesPage({super.key});
@@ -20,6 +21,7 @@ class _AdminBundlesPageState extends State<AdminBundlesPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      // print('DEBUG: mulai fetch data bundle...'); // jgn dihapus buat debug ntar
       Provider.of<BundleProvider>(context, listen: false).fetchBundles();
       Provider.of<ProductProvider>(context, listen: false).fetchProducts();
     });
@@ -56,7 +58,13 @@ class _AdminBundlesPageState extends State<AdminBundlesPage> {
                   ),
                 ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => _showAddBundleDialog(),
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => const BundleFormPage(),
+            ),
+          );
+        },
         backgroundColor: ThemeConfig.primaryColor,
         icon: const Icon(Icons.add_rounded),
         label: const Text('Tambah Paket'),
@@ -114,7 +122,10 @@ class _AdminBundlesPageState extends State<AdminBundlesPage> {
                         ),
                       ),
                       const SizedBox(height: 8),
-                      Row(
+                      Wrap(
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        spacing: 8,
+                        runSpacing: 4,
                         children: [
                           Text(
                             CurrencyFormatter.format(bundle.originalPrice),
@@ -123,7 +134,6 @@ class _AdminBundlesPageState extends State<AdminBundlesPage> {
                               decoration: TextDecoration.lineThrough,
                             ),
                           ),
-                          const SizedBox(width: 8),
                           Text(
                             CurrencyFormatter.format(bundle.promoPrice),
                             style: ThemeConfig.bodyMedium.copyWith(
@@ -131,7 +141,6 @@ class _AdminBundlesPageState extends State<AdminBundlesPage> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          const SizedBox(width: 8),
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                             decoration: BoxDecoration(
@@ -195,7 +204,11 @@ class _AdminBundlesPageState extends State<AdminBundlesPage> {
                         ),
                       );
                     } else if (value == 'edit') {
-                      _showEditBundleDialog(bundle);
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => BundleFormPage(bundle: bundle),
+                        ),
+                      );
                     } else if (value == 'delete') {
                       _confirmDelete(bundle);
                     }
@@ -248,180 +261,7 @@ class _AdminBundlesPageState extends State<AdminBundlesPage> {
                 ],
               ),
             ),
-        ],
-      ),
-    );
-  }
-
-  void _showAddBundleDialog() {
-    final nameController = TextEditingController();
-    final descController = TextEditingController();
-    final originalPriceController = TextEditingController();
-    final promoPriceController = TextEditingController();
-
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Tambah Paket Bundling'),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: nameController,
-                decoration: const InputDecoration(
-                  labelText: 'Nama Paket',
-                  hintText: 'Contoh: Paket Hemat Lebaran',
-                ),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: descController,
-                decoration: const InputDecoration(
-                  labelText: 'Deskripsi',
-                  hintText: 'Deskripsi paket bundling',
-                ),
-                maxLines: 3,
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: originalPriceController,
-                decoration: const InputDecoration(
-                  labelText: 'Harga Normal',
-                  prefixText: 'Rp ',
-                ),
-                keyboardType: TextInputType.number,
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: promoPriceController,
-                decoration: const InputDecoration(
-                  labelText: 'Harga Promo',
-                  prefixText: 'Rp ',
-                ),
-                keyboardType: TextInputType.number,
-              ),
-            ],
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Batal'),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              if (nameController.text.isEmpty ||
-                  originalPriceController.text.isEmpty ||
-                  promoPriceController.text.isEmpty) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Mohon lengkapi semua field')),
-                );
-                return;
-              }
-
-              final bundleProvider = Provider.of<BundleProvider>(context, listen: false);
-              final result = await bundleProvider.createBundle({
-                'name': nameController.text,
-                'description': descController.text,
-                'original_price': double.parse(originalPriceController.text),
-                'promo_price': double.parse(promoPriceController.text),
-                'is_available': 1,
-              });
-
-              if (context.mounted) {
-                Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(result['message']),
-                    backgroundColor: result['success']
-                        ? ThemeConfig.successColor
-                        : ThemeConfig.errorColor,
-                  ),
-                );
-              }
-            },
-            child: const Text('Simpan'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showEditBundleDialog(dynamic bundle) {
-    final nameController = TextEditingController(text: bundle.name);
-    final descController = TextEditingController(text: bundle.description ?? '');
-    final originalPriceController = TextEditingController(text: bundle.originalPrice.toString());
-    final promoPriceController = TextEditingController(text: bundle.promoPrice.toString());
-
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Edit Paket Bundling'),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: nameController,
-                decoration: const InputDecoration(labelText: 'Nama Paket'),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: descController,
-                decoration: const InputDecoration(labelText: 'Deskripsi'),
-                maxLines: 3,
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: originalPriceController,
-                decoration: const InputDecoration(
-                  labelText: 'Harga Normal',
-                  prefixText: 'Rp ',
-                ),
-                keyboardType: TextInputType.number,
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: promoPriceController,
-                decoration: const InputDecoration(
-                  labelText: 'Harga Promo',
-                  prefixText: 'Rp ',
-                ),
-                keyboardType: TextInputType.number,
-              ),
-            ],
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Batal'),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              final bundleProvider = Provider.of<BundleProvider>(context, listen: false);
-              final result = await bundleProvider.updateBundle(bundle.id, {
-                'name': nameController.text,
-                'description': descController.text,
-                'original_price': double.parse(originalPriceController.text),
-                'promo_price': double.parse(promoPriceController.text),
-              });
-
-              if (context.mounted) {
-                Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(result['message']),
-                    backgroundColor: result['success']
-                        ? ThemeConfig.successColor
-                        : ThemeConfig.errorColor,
-                  ),
-                );
-              }
-            },
-            child: const Text('Simpan'),
-          ),
+            // kalau bundle kosong ga ditampilin ya
         ],
       ),
     );

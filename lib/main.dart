@@ -21,9 +21,11 @@ void main() async {
   await initializeDateFormatting('id_ID', null);
 
   // Muat cart dari local storage sebelum app jalan
+  // biar pesenan di keranjang ga ilang pas di-close wkwk
   final cartProvider = CartProvider();
   await cartProvider.loadCart();
 
+  // bismillah moga ga error pas presentasi
   runApp(MyApp(cartProvider: cartProvider));
 }
 

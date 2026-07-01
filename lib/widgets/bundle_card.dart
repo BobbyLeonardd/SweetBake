@@ -38,26 +38,39 @@ class BundleCard extends StatelessWidget {
                     child: SizedBox(
                       width: double.infinity,
                       child: bundle.imageUrl != null && bundle.imageUrl!.isNotEmpty
-                          ? CachedNetworkImage(
-                              imageUrl: bundle.imageUrl!,
-                              fit: BoxFit.cover,
-                              placeholder: (context, url) => Container(
-                                color: Colors.grey.shade200,
-                                child: const Center(
-                                  child: CircularProgressIndicator(
-                                    color: ThemeConfig.primaryColor,
+                          ? (bundle.imageUrl!.startsWith('http')
+                              ? CachedNetworkImage(
+                                  imageUrl: bundle.imageUrl!,
+                                  fit: BoxFit.cover,
+                                  placeholder: (context, url) => Container(
+                                    color: Colors.grey.shade200,
+                                    child: const Center(
+                                      child: CircularProgressIndicator(
+                                        color: ThemeConfig.primaryColor,
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ),
-                              errorWidget: (context, url, error) => Container(
-                                color: Colors.grey.shade200,
-                                child: Icon(
-                                  Icons.card_giftcard_rounded,
-                                  size: 50,
-                                  color: Colors.grey.shade400,
-                                ),
-                              ),
-                            )
+                                  errorWidget: (context, url, error) => Container(
+                                    color: Colors.grey.shade200,
+                                    child: Icon(
+                                      Icons.card_giftcard_rounded,
+                                      size: 50,
+                                      color: Colors.grey.shade400,
+                                    ),
+                                  ),
+                                )
+                              : Image.asset(
+                                  bundle.imageUrl!,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) => Container(
+                                    color: Colors.grey.shade200,
+                                    child: Icon(
+                                      Icons.card_giftcard_rounded,
+                                      size: 50,
+                                      color: Colors.grey.shade400,
+                                    ),
+                                  ),
+                                ))
                           : Container(
                               color: Colors.grey.shade200,
                               child: Icon(

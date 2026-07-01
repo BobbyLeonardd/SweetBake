@@ -201,7 +201,7 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
                 ),
                 const SizedBox(height: 12),
                 SizedBox(
-                  height: 240,
+                  height: 280, // Increased from 240 to fix bottom overflow
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
                     padding: const EdgeInsets.symmetric(horizontal: 16),

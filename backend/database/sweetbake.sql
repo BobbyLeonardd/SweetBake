@@ -211,6 +211,7 @@ CREATE TABLE `orders` (
   `branch_id` int DEFAULT NULL,
   `branch_name` varchar(100) DEFAULT NULL,
   `delivery_method` varchar(20) NOT NULL DEFAULT 'delivery',
+  `payment_method` varchar(50) NOT NULL DEFAULT 'cash',
   `status` enum('pending','confirmed','processing','shipped','delivered','cancelled') DEFAULT 'pending',
   `payment_status` enum('unpaid','paid') DEFAULT 'unpaid',
   `notes` text,

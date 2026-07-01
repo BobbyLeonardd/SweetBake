@@ -316,6 +316,7 @@ class _AdminBundleItemsPageState extends State<AdminBundleItemsPage> {
                 ),
                 const SizedBox(height: 8),
                 DropdownButtonFormField<int>(
+                  isExpanded: true,
                   initialValue: selectedProductId,
                   decoration: const InputDecoration(
                     hintText: 'Pilih produk...',

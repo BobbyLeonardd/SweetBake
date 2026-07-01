@@ -1,13 +1,16 @@
 class ApiConfig {
-    // KONFIGURASI BASE URL - SESUAIKAN DENGAN DEVICE YANG DIGUNAKAN
-    // Emulator Android (default)  : http://10.0.2.2/sweetbake/backend/api
+  // KONFIGURASI BASE URL - SESUAIKAN DENGAN DEVICE YANG DIGUNAKAN
+  // PENTING: jangan lupa ganti IP nya sesuai wifi masing-masing ya wkwk
+  // Emulator Android (default)  : http://10.0.2.2/sweetbake/backend/api
   // Device Fisik (WiFi sama)    : http://192.168.x.x/sweetbake/backend/api
-  //   → Cari IP komputer: jalankan `ipconfig` di CMD, lihat IPv4 Address
+  //   → Cari IP komputer: buka CMD terus ketik ipconfig, liat yang IPv4
   // Windows Desktop / Web       : http://localhost/sweetbake/backend/api
   // iOS Simulator               : http://localhost/sweetbake/backend/api
-    static const String baseUrl = 'http://10.0.2.2/sweetbake/backend/api';
+  
+  // uncomment salah satu aja ya guys
+  static const String baseUrl = 'http://10.0.2.2/sweetbake/backend/api';
 
-  // Endpoints
+  // Endpoints (tolong jangan diganti-ganti ntar error)
   static const String authEndpoint = '$baseUrl/auth.php';
   static const String productsEndpoint = '$baseUrl/products.php';
   static const String ordersEndpoint = '$baseUrl/orders.php';
