@@ -39,6 +39,7 @@ class ProductProvider with ChangeNotifier {
       _categories = await ApiService.getCategories();
       notifyListeners();
     } catch (e) {
+      print('Error fetching categories: $e');
     }
   }
 
