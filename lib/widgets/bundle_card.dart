@@ -8,11 +8,7 @@ class BundleCard extends StatelessWidget {
   final Bundle bundle;
   final VoidCallback onTap;
 
-  const BundleCard({
-    super.key,
-    required this.bundle,
-    required this.onTap,
-  });
+  const BundleCard({super.key, required this.bundle, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -29,48 +25,53 @@ class BundleCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Image with discount badge
-            Flexible(
-              flex: 3,
+            Expanded(
               child: Stack(
                 children: [
                   ClipRRect(
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(20),
+                    ),
                     child: SizedBox(
                       width: double.infinity,
-                      child: bundle.imageUrl != null && bundle.imageUrl!.isNotEmpty
+                      child:
+                          bundle.imageUrl != null && bundle.imageUrl!.isNotEmpty
                           ? (bundle.imageUrl!.startsWith('http')
-                              ? CachedNetworkImage(
-                                  imageUrl: bundle.imageUrl!,
-                                  fit: BoxFit.cover,
-                                  placeholder: (context, url) => Container(
-                                    color: Colors.grey.shade200,
-                                    child: const Center(
-                                      child: CircularProgressIndicator(
-                                        color: ThemeConfig.primaryColor,
+                                ? CachedNetworkImage(
+                                    imageUrl: bundle.imageUrl!,
+                                    fit: BoxFit.cover,
+                                    placeholder: (context, url) => Container(
+                                      color: Colors.grey.shade200,
+                                      child: const Center(
+                                        child: CircularProgressIndicator(
+                                          color: ThemeConfig.primaryColor,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  errorWidget: (context, url, error) => Container(
-                                    color: Colors.grey.shade200,
-                                    child: Icon(
-                                      Icons.card_giftcard_rounded,
-                                      size: 50,
-                                      color: Colors.grey.shade400,
-                                    ),
-                                  ),
-                                )
-                              : Image.asset(
-                                  bundle.imageUrl!,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (context, error, stackTrace) => Container(
-                                    color: Colors.grey.shade200,
-                                    child: Icon(
-                                      Icons.card_giftcard_rounded,
-                                      size: 50,
-                                      color: Colors.grey.shade400,
-                                    ),
-                                  ),
-                                ))
+                                    errorWidget: (context, url, error) =>
+                                        Container(
+                                          color: Colors.grey.shade200,
+                                          child: Icon(
+                                            Icons.card_giftcard_rounded,
+                                            size: 50,
+                                            color: Colors.grey.shade400,
+                                          ),
+                                        ),
+                                  )
+                                : Image.asset(
+                                    bundle.imageUrl!,
+                                    fit: BoxFit.cover,
+                                    errorBuilder:
+                                        (context, error, stackTrace) =>
+                                            Container(
+                                              color: Colors.grey.shade200,
+                                              child: Icon(
+                                                Icons.card_giftcard_rounded,
+                                                size: 50,
+                                                color: Colors.grey.shade400,
+                                              ),
+                                            ),
+                                  ))
                           : Container(
                               color: Colors.grey.shade200,
                               child: Icon(
@@ -86,15 +87,23 @@ class BundleCard extends StatelessWidget {
                     top: 8,
                     right: 8,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
-                          colors: [ThemeConfig.primaryColor, ThemeConfig.accentColor],
+                          colors: [
+                            ThemeConfig.primaryColor,
+                            ThemeConfig.accentColor,
+                          ],
                         ),
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: [
                           BoxShadow(
-                            color: ThemeConfig.primaryColor.withValues(alpha: 0.4),
+                            color: ThemeConfig.primaryColor.withValues(
+                              alpha: 0.4,
+                            ),
                             blurRadius: 6,
                             offset: const Offset(0, 2),
                           ),
@@ -115,7 +124,10 @@ class BundleCard extends StatelessWidget {
                     top: 8,
                     left: 8,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
                         color: ThemeConfig.secondaryColor,
                         borderRadius: BorderRadius.circular(12),
@@ -146,76 +158,73 @@ class BundleCard extends StatelessWidget {
             ),
 
             // Content
-            Flexible(
-              flex: 2,
-              child: Padding(
-                padding: const EdgeInsets.all(10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // Bundle name
-                    Text(
-                      bundle.name,
-                      style: ThemeConfig.bodyMedium.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: ThemeConfig.textPrimaryColor,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Bundle name
+                  Text(
+                    bundle.name,
+                    style: ThemeConfig.bodyMedium.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: ThemeConfig.textPrimaryColor,
                     ),
-                    const SizedBox(height: 2),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 2),
 
-                    // Items count
-                    if (bundle.items != null && bundle.items!.isNotEmpty)
+                  // Items count
+                  if (bundle.items != null && bundle.items!.isNotEmpty)
+                    Text(
+                      '${bundle.items!.length} produk',
+                      style: ThemeConfig.bodySmall.copyWith(
+                        color: ThemeConfig.textSecondaryColor,
+                        fontSize: 11,
+                      ),
+                    ),
+                  const SizedBox(height: 8),
+
+                  // Prices
+                  Row(
+                    children: [
+                      // Original price (strikethrough)
                       Text(
-                        '${bundle.items!.length} produk',
+                        CurrencyFormatter.format(bundle.originalPrice),
                         style: ThemeConfig.bodySmall.copyWith(
                           color: ThemeConfig.textSecondaryColor,
-                          fontSize: 11,
+                          decoration: TextDecoration.lineThrough,
+                          fontSize: 10,
                         ),
                       ),
-                    const Spacer(),
-
-                    // Prices
-                    Row(
-                      children: [
-                        // Original price (strikethrough)
-                        Text(
-                          CurrencyFormatter.format(bundle.originalPrice),
-                          style: ThemeConfig.bodySmall.copyWith(
-                            color: ThemeConfig.textSecondaryColor,
-                            decoration: TextDecoration.lineThrough,
-                            fontSize: 10,
+                      const SizedBox(width: 6),
+                      // Promo price
+                      Expanded(
+                        child: Text(
+                          CurrencyFormatter.format(bundle.promoPrice),
+                          style: ThemeConfig.bodyMedium.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: ThemeConfig.primaryColor,
                           ),
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        const SizedBox(width: 6),
-                        // Promo price
-                        Expanded(
-                          child: Text(
-                            CurrencyFormatter.format(bundle.promoPrice),
-                            style: ThemeConfig.bodyMedium.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: ThemeConfig.primaryColor,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    // Savings
-                    const SizedBox(height: 2),
-                    Text(
-                      'Hemat ${CurrencyFormatter.format(bundle.savings)}',
-                      style: ThemeConfig.bodySmall.copyWith(
-                        color: ThemeConfig.successColor,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 10,
                       ),
+                    ],
+                  ),
+
+                  // Savings
+                  const SizedBox(height: 2),
+                  Text(
+                    'Hemat ${CurrencyFormatter.format(bundle.savings)}',
+                    style: ThemeConfig.bodySmall.copyWith(
+                      color: ThemeConfig.successColor,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 10,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ],

@@ -179,7 +179,7 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
                       ),
                       const SizedBox(width: 8),
                       Text('Paket Bundling', style: ThemeConfig.heading3),
-                      const Spacer(),
+                      const SizedBox(width: 8),
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                         decoration: BoxDecoration(
