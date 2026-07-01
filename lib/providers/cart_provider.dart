@@ -24,7 +24,6 @@ class CartProvider with ChangeNotifier {
     return _items.fold(0.0, (sum, item) => sum + item.subtotal);
   }
 
-  // Muat cart dari local storage saat app buka
   Future<void> loadCart() async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -36,18 +35,15 @@ class CartProvider with ChangeNotifier {
         notifyListeners();
       }
     } catch (e) {
-      // kalau gagal load, biarkan cart kosong
     }
   }
 
-  // Simpan cart ke local storage
   Future<void> _saveCart() async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final encoded = jsonEncode(_items.map((e) => e.toJsonFull()).toList());
       await prefs.setString(_cartKey, encoded);
     } catch (e) {
-      // kalau gagal simpan, lanjut saja
     }
   }
 

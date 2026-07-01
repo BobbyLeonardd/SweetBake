@@ -11,7 +11,6 @@ import '../models/bundle_model.dart';
 import '../models/branch_model.dart';
 
 class ApiService {
-    // AUTENTIKASI
     static Future<Map<String, dynamic>> login(String email, String password) async {
     try {
       final response = await http.post(
@@ -47,7 +46,6 @@ class ApiService {
     }
   }
 
-    // PRODUK
     static Future<List<Product>> getProducts() async {
     try {
       final response = await http.get(Uri.parse(ApiConfig.productsEndpoint));
@@ -122,8 +120,6 @@ class ApiService {
     }
   }
 
-    // PESANAN
-    // customerId null = ambil semua pesanan (untuk admin)
   static Future<List<Order>> getOrders({int? customerId}) async {
     try {
       String url = ApiConfig.ordersEndpoint;
@@ -199,7 +195,6 @@ class ApiService {
     }
   }
 
-    // KATEGORI
     static Future<List<Category>> getCategories() async {
     try {
       final response = await http.get(Uri.parse(ApiConfig.categoriesEndpoint));
@@ -254,7 +249,6 @@ class ApiService {
     }
   }
 
-    // ONGKOS KIRIM
     static Future<List<ShippingCost>> getShippingCosts() async {
     try {
       final response = await http.get(Uri.parse(ApiConfig.shippingEndpoint));
@@ -272,7 +266,6 @@ class ApiService {
     }
   }
 
-  // ambil ongkir berdasarkan kota yang dipilih customer saat checkout
   static Future<ShippingCost?> getShippingCostByCity(String city) async {
     try {
       final response = await http.get(
@@ -327,7 +320,6 @@ class ApiService {
     }
   }
 
-    // USER / CUSTOMER (untuk halaman admin)
     static Future<List<User>> getCustomers() async {
     try {
       final response = await http.get(Uri.parse(ApiConfig.usersEndpoint));
@@ -369,7 +361,6 @@ class ApiService {
     }
   }
 
-    // WISHLIST
     static Future<List<Product>> getWishlist(int userId) async {
     try {
       final response = await http.get(
@@ -389,7 +380,6 @@ class ApiService {
     }
   }
 
-  // toggle: kalau produk belum di wishlist → tambah, kalau sudah → hapus
   static Future<Map<String, dynamic>> toggleWishlist(int userId, int productId) async {
     try {
       final response = await http.post(
@@ -407,7 +397,6 @@ class ApiService {
     }
   }
 
-    // ANALYTICS (untuk dashboard admin)
     static Future<Map<String, dynamic>> getAnalytics() async {
     try {
       final response = await http.get(Uri.parse(ApiConfig.analyticsEndpoint));
@@ -423,7 +412,6 @@ class ApiService {
     }
   }
 
-    // BUNDLES (Paket Bundling Kue)
     static Future<List<Bundle>> getBundles() async {
     try {
       final response = await http.get(Uri.parse(ApiConfig.bundlesEndpoint));
@@ -498,7 +486,6 @@ class ApiService {
     }
   }
 
-  // Bundle Items
   static Future<Map<String, dynamic>> addBundleItem(int bundleId, int productId, int quantity) async {
     try {
       final response = await http.post(
@@ -529,7 +516,6 @@ class ApiService {
     }
   }
 
-    // CABANG (BRANCHES)
     static Future<List<Branch>> getBranches({bool activeOnly = true}) async {
     try {
       final url = activeOnly
@@ -586,7 +572,6 @@ class ApiService {
     }
   }
 
-    // UPLOAD GAMBAR
     static Future<Map<String, dynamic>> uploadImage(String filePath) async {
     try {
       final request = http.MultipartRequest(

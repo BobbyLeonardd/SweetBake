@@ -52,7 +52,6 @@ class _AdminBundleItemsPageState extends State<AdminBundleItemsPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Bundle info card
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
@@ -123,7 +122,6 @@ class _AdminBundleItemsPageState extends State<AdminBundleItemsPage> {
                   ),
                   const SizedBox(height: 24),
 
-                  // Current items
                   Row(
                     children: [
                       Text(
@@ -209,7 +207,6 @@ class _AdminBundleItemsPageState extends State<AdminBundleItemsPage> {
       ),
       child: Row(
         children: [
-          // Product image placeholder
           Container(
             width: 60,
             height: 60,
@@ -225,7 +222,6 @@ class _AdminBundleItemsPageState extends State<AdminBundleItemsPage> {
           ),
           const SizedBox(width: 12),
 
-          // Product info
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -268,7 +264,6 @@ class _AdminBundleItemsPageState extends State<AdminBundleItemsPage> {
             ),
           ),
 
-          // Delete button
           IconButton(
             icon: const Icon(Icons.delete_rounded, color: Colors.red),
             onPressed: () => _confirmRemoveItem(item),
@@ -281,7 +276,6 @@ class _AdminBundleItemsPageState extends State<AdminBundleItemsPage> {
   void _showAddProductDialog(Bundle bundle) {
     final productProvider = Provider.of<ProductProvider>(context, listen: false);
     final availableProducts = productProvider.products.where((product) {
-      // Filter out products already in bundle
       return !(bundle.items?.any((item) => item.productId == product.id) ?? false);
     }).toList();
 

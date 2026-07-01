@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ThemeConfig {
-  // Premium Bakery Color Palette
   static const Color primaryColor = Color(0xFFD94A6E); // Elegant Rose
   static const Color secondaryColor = Color(0xFFF5D7B6); // Warm Vanilla
   static const Color accentColor = Color(0xFF5D4037); // Rich Chocolate
@@ -16,7 +15,6 @@ class ThemeConfig {
   static const Color errorColor = Color(0xFFE53935);
   static const Color warningColor = Color(0xFFFFB300);
 
-  // Reusable Soft Shadows for Premium Feel
   static List<BoxShadow> get softShadow => [
         BoxShadow(
           color: accentColor.withValues(alpha: 0.06),
@@ -26,7 +24,6 @@ class ThemeConfig {
         ),
       ];
 
-  // Theme Data
   static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,
@@ -134,7 +131,6 @@ class ThemeConfig {
     );
   }
 
-  // Text Styles (Using Outfit for a modern, geometric, yet friendly look)
   static TextStyle get heading1 => GoogleFonts.outfit(
         fontSize: 32,
         fontWeight: FontWeight.w700,

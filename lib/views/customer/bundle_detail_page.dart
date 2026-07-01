@@ -18,7 +18,6 @@ class BundleDetailPage extends StatelessWidget {
       backgroundColor: ThemeConfig.backgroundColor,
       body: CustomScrollView(
         slivers: [
-          // App Bar with Image
           SliverAppBar(
             expandedHeight: 300,
             pinned: true,
@@ -56,7 +55,6 @@ class BundleDetailPage extends StatelessWidget {
                             color: Colors.grey.shade400,
                           ),
                         ),
-                  // Gradient overlay
                   Container(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
@@ -69,7 +67,6 @@ class BundleDetailPage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  // Discount badge
                   Positioned(
                     bottom: 20,
                     right: 20,
@@ -96,14 +93,12 @@ class BundleDetailPage extends StatelessWidget {
             ),
           ),
 
-          // Content
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.all(20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Bundle badge
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
@@ -131,14 +126,12 @@ class BundleDetailPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
 
-                  // Bundle name
                   Text(
                     bundle.name,
                     style: ThemeConfig.heading1,
                   ),
                   const SizedBox(height: 16),
 
-                  // Price section
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
@@ -209,7 +202,6 @@ class BundleDetailPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 24),
 
-                  // Description
                   if (bundle.description != null && bundle.description!.isNotEmpty) ...[
                     Text(
                       'Deskripsi',
@@ -226,7 +218,6 @@ class BundleDetailPage extends StatelessWidget {
                     const SizedBox(height: 24),
                   ],
 
-                  // Bundle items
                   if (bundle.items != null && bundle.items!.isNotEmpty) ...[
                     Text(
                       'Isi Paket (${bundle.items!.length} produk)',
@@ -265,7 +256,6 @@ class BundleDetailPage extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Quantity in cart indicator
                   if (isInCart)
                     Container(
                       margin: const EdgeInsets.only(bottom: 12),
@@ -356,7 +346,6 @@ class BundleDetailPage extends StatelessWidget {
       ),
       child: Row(
         children: [
-          // Product image
           ClipRRect(
             borderRadius: BorderRadius.circular(8),
             child: item.productImage != null && item.productImage!.isNotEmpty
@@ -386,7 +375,6 @@ class BundleDetailPage extends StatelessWidget {
           ),
           const SizedBox(width: 12),
 
-          // Product info
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -410,7 +398,6 @@ class BundleDetailPage extends StatelessWidget {
             ),
           ),
 
-          // Product price
           if (item.productPrice != null)
             Text(
               CurrencyFormatter.format(item.productPrice!),

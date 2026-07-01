@@ -24,7 +24,6 @@ class BundleCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Image with discount badge
             Expanded(
               child: Stack(
                 children: [
@@ -82,7 +81,6 @@ class BundleCard extends StatelessWidget {
                             ),
                     ),
                   ),
-                  // Discount badge
                   Positioned(
                     top: 8,
                     right: 8,
@@ -119,7 +117,6 @@ class BundleCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                  // Bundle badge
                   Positioned(
                     top: 8,
                     left: 8,
@@ -157,14 +154,12 @@ class BundleCard extends StatelessWidget {
               ),
             ),
 
-            // Content
             Padding(
               padding: const EdgeInsets.all(10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Bundle name
                   Text(
                     bundle.name,
                     style: ThemeConfig.bodyMedium.copyWith(
@@ -176,7 +171,6 @@ class BundleCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 2),
 
-                  // Items count
                   if (bundle.items != null && bundle.items!.isNotEmpty)
                     Text(
                       '${bundle.items!.length} produk',
@@ -187,10 +181,8 @@ class BundleCard extends StatelessWidget {
                     ),
                   const SizedBox(height: 8),
 
-                  // Prices
                   Row(
                     children: [
-                      // Original price (strikethrough)
                       Text(
                         CurrencyFormatter.format(bundle.originalPrice),
                         style: ThemeConfig.bodySmall.copyWith(
@@ -200,7 +192,6 @@ class BundleCard extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 6),
-                      // Promo price
                       Expanded(
                         child: Text(
                           CurrencyFormatter.format(bundle.promoPrice),
@@ -214,7 +205,6 @@ class BundleCard extends StatelessWidget {
                     ],
                   ),
 
-                  // Savings
                   const SizedBox(height: 2),
                   Text(
                     'Hemat ${CurrencyFormatter.format(bundle.savings)}',

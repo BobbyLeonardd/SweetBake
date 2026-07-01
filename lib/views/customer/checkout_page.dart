@@ -120,7 +120,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
       return;
     }
 
-    // Validasi stok: cek semua produk di cart masih tersedia
     final outOfStockItems = _orderItems.where((item) {
       if (item.isProduct) {
         return item.product!.stock < item.quantity;
@@ -257,7 +256,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
               },
             ),
 
-            // Alamat cabang
             if (_selectedBranch?.address != null &&
                 _selectedBranch!.address!.isNotEmpty) ...[
               const SizedBox(height: 6),
@@ -374,7 +372,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
               }).toList(),
             ),
 
-            // Info rekening (hanya jika Transfer Bank)
             if (_selectedPaymentMethod == _PaymentMethod.transferBank) ...[
               const SizedBox(height: 12),
               Container(

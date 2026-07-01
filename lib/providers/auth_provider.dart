@@ -13,13 +13,11 @@ class AuthProvider with ChangeNotifier {
   bool get isAdmin => _user?.isAdmin ?? false;
   bool get isCustomer => _user?.isCustomer ?? false;
 
-  // Initialize - check if user is already logged in
   Future<void> initialize() async {
     _user = await AuthService.getUser();
     notifyListeners();
   }
 
-  // Login
   Future<Map<String, dynamic>> login(String email, String password) async {
     _isLoading = true;
     notifyListeners();
@@ -37,7 +35,6 @@ class AuthProvider with ChangeNotifier {
     return result;
   }
 
-  // Register
   Future<Map<String, dynamic>> register(Map<String, dynamic> data) async {
     _isLoading = true;
     notifyListeners();
@@ -75,7 +72,6 @@ class AuthProvider with ChangeNotifier {
     return result;
   }
 
-  // Logout
   Future<void> logout() async {
     await AuthService.logout();
     _user = null;

@@ -15,7 +15,6 @@ class BundleProvider with ChangeNotifier {
     return _bundles.where((bundle) => bundle.isAvailable).toList();
   }
 
-  // Fetch all bundles
   Future<void> fetchBundles() async {
     _isLoading = true;
     _error = null;
@@ -42,7 +41,6 @@ class BundleProvider with ChangeNotifier {
     }
   }
 
-  // Create bundle (admin)
   Future<Map<String, dynamic>> createBundle(Map<String, dynamic> bundleData) async {
     _isLoading = true;
     notifyListeners();
@@ -75,7 +73,6 @@ class BundleProvider with ChangeNotifier {
     return result;
   }
 
-  // Delete bundle (admin)
   Future<Map<String, dynamic>> deleteBundle(int id) async {
     _isLoading = true;
     notifyListeners();
@@ -112,7 +109,6 @@ class BundleProvider with ChangeNotifier {
     return result;
   }
 
-  // Search bundles
   List<Bundle> searchBundles(String query) {
     if (query.isEmpty) return _bundles;
 

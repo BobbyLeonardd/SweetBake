@@ -128,7 +128,6 @@ class _AdminProductsPageState extends State<AdminProductsPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // gambar produk
             Expanded(
               child: Stack(
                 fit: StackFit.expand,
@@ -146,7 +145,6 @@ class _AdminProductsPageState extends State<AdminProductsPage> {
                           color: Colors.grey[200],
                           child: const Icon(Icons.cake, size: 48, color: Colors.grey),
                         ),
-                  // badge stok habis
                   if (product.stock == 0)
                     Positioned(
                       top: 8,
@@ -160,7 +158,6 @@ class _AdminProductsPageState extends State<AdminProductsPage> {
                         child: const Text('Habis', style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold)),
                       ),
                     ),
-                  // tombol hapus di pojok kanan atas
                   Positioned(
                     top: 4,
                     right: 4,
@@ -180,7 +177,6 @@ class _AdminProductsPageState extends State<AdminProductsPage> {
                 ],
               ),
             ),
-            // info produk
             Padding(
               padding: const EdgeInsets.all(8),
               child: Column(

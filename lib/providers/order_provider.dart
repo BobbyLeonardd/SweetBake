@@ -9,7 +9,6 @@ class OrderProvider with ChangeNotifier {
   List<Order> get orders => _orders;
   bool get isLoading => _isLoading;
 
-  // Fetch orders
   Future<void> fetchOrders({int? customerId}) async {
     _isLoading = true;
     notifyListeners();
@@ -24,7 +23,6 @@ class OrderProvider with ChangeNotifier {
     return await ApiService.getOrder(id);
   }
 
-  // Create order
   Future<Map<String, dynamic>> createOrder(Map<String, dynamic> orderData) async {
     _isLoading = true;
     notifyListeners();

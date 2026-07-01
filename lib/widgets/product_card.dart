@@ -33,7 +33,6 @@ class ProductCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // cover image
               Expanded(
                 child: Stack(
                   children: [
@@ -56,7 +55,6 @@ class ProductCard extends StatelessWidget {
                         ),
                       ),
                     ),
-                    // gradient biar text kebaca
                     Positioned(
                       bottom: 0,
                       left: 0,
@@ -97,7 +95,6 @@ class ProductCard extends StatelessWidget {
                           ),
                         ),
                       ),
-                    // tombol wishlist
                     Positioned(
                       top: 8,
                       right: 8,
@@ -139,7 +136,6 @@ class ProductCard extends StatelessWidget {
                   ],
                 ),
               ),
-              // info produk
               Padding(
                 padding: const EdgeInsets.all(12),
                 child: Column(
@@ -180,7 +176,6 @@ class ProductCard extends StatelessWidget {
                             ),
                           ],
                         ),
-                        // icon add to cart
                         Container(
                           padding: const EdgeInsets.all(6),
                           decoration: BoxDecoration(

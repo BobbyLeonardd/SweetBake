@@ -42,7 +42,6 @@ class _ProfilePageState extends State<ProfilePage> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // handle bar
                 Center(
                   child: Container(
                     width: 40,
@@ -170,7 +169,6 @@ class _ProfilePageState extends State<ProfilePage> {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          // avatar + info utama
           Card(
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
             child: Padding(
@@ -215,7 +213,6 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
           const SizedBox(height: 16),
 
-          // detail kontak
           Card(
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
             child: Column(
@@ -264,7 +261,6 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
           const SizedBox(height: 16),
 
-          // tombol tentang kami
           Card(
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
             child: ListTile(
@@ -287,7 +283,6 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
           const SizedBox(height: 24),
 
-          // tombol logout
           SizedBox(
             width: double.infinity,
             child: ElevatedButton.icon(

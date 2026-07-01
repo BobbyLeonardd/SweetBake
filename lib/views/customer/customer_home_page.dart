@@ -55,7 +55,6 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
     final productProvider = Provider.of<ProductProvider>(context);
     final bundleProvider = Provider.of<BundleProvider>(context);
     
-    // filter sesuai search & kategori
     var products = _searchQuery.isEmpty
         ? productProvider.products
         : productProvider.searchProducts(_searchQuery);
@@ -66,7 +65,6 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
 
     return CustomScrollView(
       slivers: [
-        // appbar
         SliverAppBar(
           floating: true,
           pinned: true,
@@ -82,7 +80,6 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
           ],
         ),
 
-        // welcome text
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(20, 10, 20, 24),
@@ -102,7 +99,6 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
                 ),
                 const SizedBox(height: 24),
                 
-                // search bar
                 Container(
                   decoration: BoxDecoration(
                     boxShadow: ThemeConfig.softShadow,
@@ -131,7 +127,6 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
           ),
         ),
 
-        // list kategori
         if (!productProvider.isLoading && productProvider.categories.isNotEmpty)
           SliverToBoxAdapter(
             child: Column(
@@ -162,7 +157,6 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
             ),
           ),
 
-        // Paket Bundling Section
         if (!bundleProvider.isLoading && bundleProvider.availableBundles.isNotEmpty)
           SliverToBoxAdapter(
             child: Column(
@@ -230,7 +224,6 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
             ),
           ),
 
-        // title section
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -242,7 +235,6 @@ class _CustomerHomePageState extends State<CustomerHomePage> {
         ),
         const SliverToBoxAdapter(child: SizedBox(height: 12)),
 
-        // grid produk
         if (productProvider.isLoading)
           const SliverFillRemaining(
             child: LoadingWidget(),

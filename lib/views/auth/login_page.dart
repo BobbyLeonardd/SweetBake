@@ -39,7 +39,6 @@ class _LoginPageState extends State<LoginPage> {
     if (!mounted) return;
 
     if (result['success']) {
-      // cek role admin / user
       if (authProvider.isAdmin) {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (_) => const AdminDashboardPage()),
@@ -72,7 +71,6 @@ class _LoginPageState extends State<LoginPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // logo sweetbake
                   Container(
                     padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
@@ -176,7 +174,6 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         const SizedBox(height: 32),
 
-                        // tombol login
                         Consumer<AuthProvider>(
                           builder: (context, auth, _) {
                             return Container(
@@ -264,7 +261,6 @@ class _LoginPageState extends State<LoginPage> {
 
                   const SizedBox(height: 32),
 
-                  // info demo login
                   Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 20,

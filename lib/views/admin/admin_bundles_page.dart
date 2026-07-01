@@ -21,7 +21,6 @@ class _AdminBundlesPageState extends State<AdminBundlesPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // print('DEBUG: mulai fetch data bundle...'); // jgn dihapus buat debug ntar
       Provider.of<BundleProvider>(context, listen: false).fetchBundles();
       Provider.of<ProductProvider>(context, listen: false).fetchProducts();
     });
@@ -87,7 +86,6 @@ class _AdminBundlesPageState extends State<AdminBundlesPage> {
             padding: const EdgeInsets.all(16),
             child: Row(
               children: [
-                // Bundle icon
                 Container(
                   width: 60,
                   height: 60,
@@ -103,7 +101,6 @@ class _AdminBundlesPageState extends State<AdminBundlesPage> {
                 ),
                 const SizedBox(width: 16),
 
-                // Bundle info
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -161,7 +158,6 @@ class _AdminBundlesPageState extends State<AdminBundlesPage> {
                   ),
                 ),
 
-                // Actions
                 PopupMenuButton(
                   icon: const Icon(Icons.more_vert_rounded),
                   itemBuilder: (context) => [
@@ -218,7 +214,6 @@ class _AdminBundlesPageState extends State<AdminBundlesPage> {
             ),
           ),
 
-          // Bundle items
           if (bundle.items != null && bundle.items!.isNotEmpty)
             Container(
               padding: const EdgeInsets.all(16),
@@ -261,7 +256,6 @@ class _AdminBundlesPageState extends State<AdminBundlesPage> {
                 ],
               ),
             ),
-            // kalau bundle kosong ga ditampilin ya
         ],
       ),
     );

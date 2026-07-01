@@ -32,7 +32,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // foto produk
             CachedNetworkImage(
               imageUrl: widget.product.imageUrl ?? '',
               width: double.infinity,
@@ -111,7 +110,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   ),
                   const SizedBox(height: 24),
 
-                  // pilih jumlah
                   Text(
                     'Jumlah',
                     style: ThemeConfig.heading3,

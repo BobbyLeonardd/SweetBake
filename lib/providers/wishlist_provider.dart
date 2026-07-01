@@ -27,7 +27,6 @@ class WishlistProvider with ChangeNotifier {
     final result = await ApiService.toggleWishlist(userId, productId);
     
     if (result['success']) {
-      // Refresh wishlist after toggle
       await fetchWishlist(userId);
     }
     

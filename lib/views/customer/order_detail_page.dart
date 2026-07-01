@@ -72,7 +72,6 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          // info pesanan
           Card(
             child: Padding(
               padding: const EdgeInsets.all(16),
@@ -96,7 +95,6 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
           ),
           const SizedBox(height: 16),
 
-          // list produk
           Text('Produk', style: ThemeConfig.heading3),
           const SizedBox(height: 8),
           ...(_order!.items ?? []).map((item) => Card(
@@ -126,7 +124,6 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
               )),
           const SizedBox(height: 16),
 
-          // info pengiriman
           Text('Pengiriman', style: ThemeConfig.heading3),
           const SizedBox(height: 8),
           Card(
@@ -192,7 +189,6 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
           ),
           const SizedBox(height: 16),
 
-          // status tracking
           if (_order!.tracking != null && _order!.tracking!.isNotEmpty) ...[
             Text('Riwayat Pelacakan', style: ThemeConfig.heading3),
             const SizedBox(height: 8),
@@ -266,7 +262,6 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
             const SizedBox(height: 16),
           ],
 
-          // total harga
           Card(
             color: ThemeConfig.primaryColor.withValues(alpha: 0.05),
             shape: RoundedRectangleBorder(
@@ -291,7 +286,6 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
           ),
           const SizedBox(height: 24),
 
-          // tombol konfirmasi pembayaran (hanya jika status bukan cancelled/delivered dan payment belum paid)
           if (_order!.paymentStatus == 'unpaid' &&
               _order!.status != 'cancelled' &&
               _order!.status != 'delivered') ...[
@@ -353,7 +347,6 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
             const SizedBox(height: 12),
           ],
 
-          // tombol cancel
           if (_order!.status == 'pending')
             SizedBox(
               width: double.infinity,

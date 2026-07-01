@@ -111,7 +111,6 @@ class _RegisterPageState extends State<RegisterPage> {
                     if (value == null || value.trim().isEmpty) {
                       return 'Email tidak boleh kosong';
                     }
-                    // validasi email lebih ketat pakai regex
                     final emailRegex = RegExp(r'^[\w\-.]+@[\w\-]+\.[a-zA-Z]{2,}$');
                     if (!emailRegex.hasMatch(value.trim())) {
                       return 'Format email tidak valid (contoh: nama@email.com)';

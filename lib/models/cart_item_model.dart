@@ -20,7 +20,6 @@ class CartItem {
           'Product must be provided for product type, Bundle for bundle type',
         );
 
-  // Factory constructor untuk product
   factory CartItem.fromProduct(Product product, {int quantity = 1}) {
     return CartItem(
       product: product,
@@ -29,7 +28,6 @@ class CartItem {
     );
   }
 
-  // Factory constructor untuk bundle
   factory CartItem.fromBundle(Bundle bundle, {int quantity = 1}) {
     return CartItem(
       bundle: bundle,
@@ -52,7 +50,6 @@ class CartItem {
 
   bool get isBundle => type == CartItemType.bundle;
 
-  // untuk kirim ke API (tanpa data lengkap)
   Map<String, dynamic> toJson() {
     if (type == CartItemType.product) {
       return {
@@ -73,7 +70,6 @@ class CartItem {
     }
   }
 
-  // untuk simpan ke shared_preferences (butuh data lengkap)
   Map<String, dynamic> toJsonFull() {
     if (type == CartItemType.product) {
       return {

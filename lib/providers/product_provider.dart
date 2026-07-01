@@ -17,7 +17,6 @@ class ProductProvider with ChangeNotifier {
   bool get hasError => _errorMessage != null;
   bool get fetchedOnce => _fetchedOnce;
 
-  // Fetch products
   Future<void> fetchProducts() async {
     _isLoading = true;
     _errorMessage = null;
@@ -35,13 +34,11 @@ class ProductProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // Fetch categories
   Future<void> fetchCategories() async {
     try {
       _categories = await ApiService.getCategories();
       notifyListeners();
     } catch (e) {
-      // kategori gagal load, tidak perlu blokir UI utama
     }
   }
 
@@ -49,7 +46,6 @@ class ProductProvider with ChangeNotifier {
     return _products.where((p) => p.categoryId == categoryId).toList();
   }
 
-  // Search products
   List<Product> searchProducts(String query) {
     if (query.isEmpty) return _products;
 
@@ -59,7 +55,6 @@ class ProductProvider with ChangeNotifier {
     ).toList();
   }
 
-  // Create product (Admin)
   Future<Map<String, dynamic>> createProduct(Map<String, dynamic> productData) async {
     final result = await ApiService.createProduct(productData);
 
@@ -80,7 +75,6 @@ class ProductProvider with ChangeNotifier {
     return result;
   }
 
-  // Delete product (Admin)
   Future<Map<String, dynamic>> deleteProduct(int id) async {
     final result = await ApiService.deleteProduct(id);
 

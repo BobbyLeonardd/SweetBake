@@ -113,7 +113,6 @@ class CartPage extends StatelessWidget {
         padding: const EdgeInsets.all(12),
         child: Row(
           children: [
-            // Image with badge
             Stack(
               children: [
                 ClipRRect(
@@ -134,7 +133,6 @@ class CartPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                // Bundle badge
                 if (item.isBundle)
                   Positioned(
                     top: 4,
@@ -159,12 +157,10 @@ class CartPage extends StatelessWidget {
             ),
             const SizedBox(width: 12),
 
-            // Item info
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Name
                   Text(
                     item.name,
                     style: ThemeConfig.bodyMedium.copyWith(
@@ -175,7 +171,6 @@ class CartPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
 
-                  // Price with bundle info
                   Row(
                     children: [
                       Text(
@@ -206,7 +201,6 @@ class CartPage extends StatelessWidget {
                     ],
                   ),
 
-                  // Bundle items count
                   if (item.isBundle && item.bundle!.items != null) ...[
                     const SizedBox(height: 4),
                     Text(
@@ -220,7 +214,6 @@ class CartPage extends StatelessWidget {
 
                   const SizedBox(height: 8),
 
-                  // Quantity controls
                   Row(
                     children: [
                       IconButton(
@@ -275,7 +268,6 @@ class CartPage extends StatelessWidget {
               ),
             ),
 
-            // Delete button and subtotal
             Column(
               children: [
                 IconButton(

@@ -140,7 +140,6 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                   ),
                   const SizedBox(height: 24),
 
-                  // load data statistik
                   FutureBuilder<Map<String, dynamic>>(
                     future: _analyticsFuture,
                     builder: (context, snapshot) {
@@ -244,7 +243,6 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                   Text('Menu Manajemen', style: ThemeConfig.heading3),
                   const SizedBox(height: 16),
 
-                  // menu admin
                   _MenuCard(
                     title: 'Kelola Produk',
                     subtitle: 'Tambah, edit, dan hapus katalog produk Anda',
