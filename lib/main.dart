@@ -20,12 +20,9 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeDateFormatting('id_ID', null);
 
-  // Muat cart dari local storage sebelum app jalan
-  // biar pesenan di keranjang ga ilang pas di-close wkwk
   final cartProvider = CartProvider();
   await cartProvider.loadCart();
 
-  // bismillah moga ga error pas presentasi
   runApp(MyApp(cartProvider: cartProvider));
 }
 
@@ -88,7 +85,6 @@ class _SplashScreenState extends State<SplashScreen> {
 
     if (!mounted) return;
 
-    // Navigate based on auth status
     if (authProvider.isLoggedIn) {
       if (authProvider.isAdmin) {
         Navigator.of(context).pushReplacement(
