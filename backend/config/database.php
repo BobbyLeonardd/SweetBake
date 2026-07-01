@@ -1,5 +1,4 @@
 <?php
-// Database Configuration
 class Database {
     private $host = "localhost";
     private $db_name = "sweetbake";
@@ -7,7 +6,6 @@ class Database {
     private $password = "";
     public $conn;
 
-    // Get database connection
     public function getConnection() {
         $this->conn = null;
 
@@ -27,7 +25,6 @@ class Database {
     }
 }
 
-// CORS Headers
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE");

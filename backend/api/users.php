@@ -7,7 +7,6 @@ $db = $database->getConnection();
 $method = $_SERVER['REQUEST_METHOD'];
 $data = json_decode(file_get_contents("php://input"));
 
-// GET Users (Customers)
 if ($method == 'GET') {
     $id = isset($_GET['id']) ? $_GET['id'] : null;
 
@@ -37,7 +36,6 @@ if ($method == 'GET') {
     }
 }
 
-// UPDATE User (PUT)
 if ($method == 'PUT') {
     if (isset($data->id)) {
         $query = "UPDATE users SET 
@@ -65,13 +63,10 @@ if ($method == 'PUT') {
     }
 }
 
-// DELETE User
 if ($method == 'DELETE') {
     $id = isset($_GET['id']) ? $_GET['id'] : null;
     
     if ($id) {
-        // First check if user has orders, maybe we should prevent deletion or cascade.
-        // For simplicity, we just delete the user.
         $query = "DELETE FROM users WHERE id = :id AND role = 'customer'";
         $stmt = $db->prepare($query);
         $stmt->bindParam(":id", $id);
@@ -83,7 +78,6 @@ if ($method == 'DELETE') {
                 echo json_encode(["success" => false, "message" => "Failed to delete customer"]);
             }
         } catch (PDOException $e) {
-            // Usually fails due to foreign key constraint with orders
             echo json_encode(["success" => false, "message" => "Failed to delete customer. They might have active orders.", "error" => $e->getMessage()]);
         }
     } else {

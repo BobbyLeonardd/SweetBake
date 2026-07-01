@@ -6,7 +6,6 @@ $db = $database->getConnection();
 
 $method = $_SERVER['REQUEST_METHOD'];
 
-// GET - Get all products or single product
 if ($method == 'GET') {
     if (isset($_GET['id'])) {
         $id = $_GET['id'];
@@ -46,7 +45,6 @@ if ($method == 'GET') {
     }
 }
 
-// POST - Create new product
 if ($method == 'POST') {
     $data = json_decode(file_get_contents("php://input"));
     
@@ -76,7 +74,6 @@ if ($method == 'POST') {
     }
 }
 
-// PUT - Update product
 if ($method == 'PUT') {
     $data = json_decode(file_get_contents("php://input"));
     
@@ -113,7 +110,6 @@ if ($method == 'PUT') {
     }
 }
 
-// DELETE - Delete product
 if ($method == 'DELETE') {
     $id = $_GET['id'] ?? null;
     

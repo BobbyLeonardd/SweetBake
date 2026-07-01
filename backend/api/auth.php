@@ -7,7 +7,6 @@ $db = $database->getConnection();
 $method = $_SERVER['REQUEST_METHOD'];
 $data = json_decode(file_get_contents("php://input"));
 
-// Login
 if ($method == 'POST' && isset($data->action) && $data->action == 'login') {
     $email = $data->email;
     $password = $data->password;
@@ -20,14 +19,12 @@ if ($method == 'POST' && isset($data->action) && $data->action == 'login') {
     if ($stmt->rowCount() > 0) {
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         
-        // Verify password
         $query2 = "SELECT password FROM users WHERE email = :email";
         $stmt2 = $db->prepare($query2);
         $stmt2->bindParam(":email", $email);
         $stmt2->execute();
         $passRow = $stmt2->fetch(PDO::FETCH_ASSOC);
         
-        // Simple password check (in production, use password_verify with bcrypt)
         if (password_verify($password, $passRow['password']) || $password == 'password') {
             echo json_encode([
                 "success" => true,
@@ -48,7 +45,6 @@ if ($method == 'POST' && isset($data->action) && $data->action == 'login') {
     }
 }
 
-// Register
 if ($method == 'POST' && isset($data->action) && $data->action == 'register') {
     $name = $data->name;
     $email = $data->email;
@@ -56,7 +52,6 @@ if ($method == 'POST' && isset($data->action) && $data->action == 'register') {
     $phone = $data->phone ?? '';
     $address = $data->address ?? '';
 
-    // Check if email exists
     $checkQuery = "SELECT id FROM users WHERE email = :email";
     $checkStmt = $db->prepare($checkQuery);
     $checkStmt->bindParam(":email", $email);

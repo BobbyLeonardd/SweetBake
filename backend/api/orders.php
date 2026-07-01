@@ -6,10 +6,8 @@ $db = $database->getConnection();
 
 $method = $_SERVER['REQUEST_METHOD'];
 
-// get data pesanan
 if ($method == 'GET') {
     if (isset($_GET['id'])) {
-        // ambil order + items
         $id = $_GET['id'];
         $query = "SELECT o.*, u.name as customer_name, u.email as customer_email, u.phone as customer_phone
                   FROM orders o 
@@ -48,7 +46,6 @@ if ($method == 'GET') {
             ]);
         }
     } elseif (isset($_GET['customer_id'])) {
-        // get order per customer
         $customer_id = $_GET['customer_id'];
         $query = "SELECT * FROM orders WHERE customer_id = :customer_id ORDER BY created_at DESC";
         $stmt = $db->prepare($query);
@@ -61,7 +58,6 @@ if ($method == 'GET') {
             "data" => $orders
         ]);
     } else {
-        // get semua order buat admin
         $query = "SELECT o.*, u.name as customer_name 
                   FROM orders o 
                   LEFT JOIN users u ON o.customer_id = u.id 
@@ -77,14 +73,12 @@ if ($method == 'GET') {
     }
 }
 
-// buat pesanan baru
 if ($method == 'POST') {
     $data = json_decode(file_get_contents("php://input"));
     
     try {
         $db->beginTransaction();
         
-        // bikin nomor resi
         $orderNumber = 'SB' . date('Ymd') . rand(1000, 9999);
         
         $query = "INSERT INTO orders (customer_id, order_number, total_amount, shipping_cost, shipping_address, shipping_city, branch_id, branch_name, delivery_method, payment_method, notes) 
@@ -114,7 +108,6 @@ if ($method == 'POST') {
             $itemType = isset($item->type) ? $item->type : 'product';
 
             if ($itemType === 'bundle') {
-                // Expand bundle → ambil produk-produk dari bundle_items
                 $bundleQty = (int)$item->quantity;
                 $bundleQuery = "SELECT bi.product_id, bi.quantity AS item_qty, p.price AS product_price
                                 FROM bundle_items bi
@@ -142,7 +135,6 @@ if ($method == 'POST') {
                     $iStmt->bindParam(":subtotal",   $productSub);
                     $iStmt->execute();
 
-                    // Kurangi stok setiap produk dalam bundle
                     $uStmt = $db->prepare(
                         "UPDATE products SET stock = stock - :qty WHERE id = :pid"
                     );
@@ -151,7 +143,6 @@ if ($method == 'POST') {
                     $uStmt->execute();
                 }
             } else {
-                // Produk biasa
                 $itemQuery = "INSERT INTO order_items (order_id, product_id, quantity, price, subtotal) 
                               VALUES (:order_id, :product_id, :quantity, :price, :subtotal)";
                 $itemStmt = $db->prepare($itemQuery);
@@ -163,7 +154,6 @@ if ($method == 'POST') {
                 $itemStmt->bindParam(":subtotal",   $item->subtotal);
                 $itemStmt->execute();
 
-                // Kurangi stok produk
                 $updateStock = "UPDATE products SET stock = stock - :quantity WHERE id = :product_id";
                 $updateStmt  = $db->prepare($updateStock);
                 $updateStmt->bindParam(":quantity",   $item->quantity);
@@ -195,7 +185,6 @@ if ($method == 'POST') {
     }
 }
 
-// update status order
 if ($method == 'PUT') {
     $data = json_decode(file_get_contents("php://input"));
     
@@ -217,7 +206,6 @@ if ($method == 'PUT') {
             $trackStmt->bindParam(":description", $data->description);
             $trackStmt->execute();
 
-            // balikin stok kalo cancel
             if ($data->status === 'cancelled') {
                 $itemQuery = "SELECT product_id, quantity FROM order_items WHERE order_id = :order_id";
                 $itemStmt = $db->prepare($itemQuery);

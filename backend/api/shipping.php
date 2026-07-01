@@ -6,7 +6,6 @@ $db = $database->getConnection();
 
 $method = $_SERVER['REQUEST_METHOD'];
 
-// GET - Get all shipping costs or by city
 if ($method == 'GET') {
     if (isset($_GET['city'])) {
         $city = $_GET['city'];
@@ -40,7 +39,6 @@ if ($method == 'GET') {
     }
 }
 
-// POST - Create shipping cost
 if ($method == 'POST') {
     $data = json_decode(file_get_contents("php://input"));
     
@@ -65,7 +63,6 @@ if ($method == 'POST') {
     }
 }
 
-// PUT - Update shipping cost
 if ($method == 'PUT') {
     $data = json_decode(file_get_contents("php://input"));
     
@@ -94,7 +91,6 @@ if ($method == 'PUT') {
     }
 }
 
-// DELETE - Delete shipping cost
 if ($method == 'DELETE') {
     $id = $_GET['id'] ?? null;
     

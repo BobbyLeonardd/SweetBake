@@ -39,7 +39,6 @@ try {
     echo json_encode(['success' => false, 'message' => 'Server error: ' . $e->getMessage()]);
 }
 
-// GET - Ambil semua cabang atau satu cabang by ID
 function handleGet($db) {
     if (isset($_GET['id'])) {
         $id = $_GET['id'];
@@ -70,7 +69,6 @@ function handleGet($db) {
     }
 }
 
-// POST - Tambah cabang baru
 function handlePost($db) {
     $data = json_decode(file_get_contents('php://input'), true);
 
@@ -104,7 +102,6 @@ function handlePost($db) {
     }
 }
 
-// PUT - Update cabang
 function handlePut($db) {
     $data = json_decode(file_get_contents('php://input'), true);
 
@@ -140,7 +137,6 @@ function handlePut($db) {
     }
 }
 
-// DELETE - Hapus cabang
 function handleDelete($db) {
     if (!isset($_GET['id'])) {
         http_response_code(400);

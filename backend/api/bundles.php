@@ -11,7 +11,6 @@ $db = $database->getConnection();
 
 $method = $_SERVER['REQUEST_METHOD'];
 
-// Handle preflight request
 if ($method === 'OPTIONS') {
     http_response_code(200);
     exit();
@@ -40,18 +39,15 @@ try {
     echo json_encode(['success' => false, 'message' => 'Server error: ' . $e->getMessage()]);
 }
 
-// GET - Ambil semua bundles atau bundle by ID
 function handleGet($db) {
     $action = $_GET['action'] ?? null;
     
     if ($action === 'remove_item') {
-        // This should be DELETE, but handling here for compatibility
         handleDelete($db);
         return;
     }
     
     if (isset($_GET['id'])) {
-        // Get single bundle with items
         $id = $_GET['id'];
         
         $query = "SELECT b.*, 
@@ -66,7 +62,6 @@ function handleGet($db) {
         $bundle = $stmt->fetch(PDO::FETCH_ASSOC);
         
         if ($bundle) {
-            // Get bundle items
             $itemQuery = "SELECT bi.*, p.name as product_name, p.image_url as product_image, p.price as product_price
                          FROM bundle_items bi
                          LEFT JOIN products p ON bi.product_id = p.id
@@ -85,7 +80,6 @@ function handleGet($db) {
             echo json_encode(['success' => false, 'message' => 'Bundle tidak ditemukan']);
         }
     } else {
-        // Get all bundles
         $query = "SELECT b.*, 
                   (SELECT COUNT(*) FROM bundle_items WHERE bundle_id = b.id) as item_count
                   FROM bundles b 
@@ -96,7 +90,6 @@ function handleGet($db) {
         
         $bundles = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
-        // Get items for each bundle
         foreach ($bundles as &$bundle) {
             $itemQuery = "SELECT bi.*, p.name as product_name, p.image_url as product_image, p.price as product_price
                          FROM bundle_items bi
@@ -115,20 +108,17 @@ function handleGet($db) {
     }
 }
 
-// POST - Tambah bundle baru atau tambah item ke bundle
 function handlePost($db) {
     $action = $_GET['action'] ?? null;
     $data = json_decode(file_get_contents('php://input'), true);
     
     if ($action === 'add_item') {
-        // Add item to bundle
         if (!isset($data['bundle_id']) || !isset($data['product_id']) || !isset($data['quantity'])) {
             http_response_code(400);
             echo json_encode(['success' => false, 'message' => 'Data tidak lengkap']);
             return;
         }
         
-        // Check if product already in bundle
         $checkQuery = "SELECT id FROM bundle_items WHERE bundle_id = :bundle_id AND product_id = :product_id";
         $checkStmt = $db->prepare($checkQuery);
         $checkStmt->bindParam(':bundle_id', $data['bundle_id']);
@@ -156,7 +146,6 @@ function handlePost($db) {
             echo json_encode(['success' => false, 'message' => 'Gagal menambahkan produk ke bundle']);
         }
     } else {
-        // Create new bundle
         if (!isset($data['name']) || !isset($data['original_price']) || !isset($data['promo_price'])) {
             http_response_code(400);
             echo json_encode(['success' => false, 'message' => 'Data tidak lengkap']);
@@ -189,7 +178,6 @@ function handlePost($db) {
     }
 }
 
-// PUT - Update bundle
 function handlePut($db) {
     $data = json_decode(file_get_contents('php://input'), true);
     
@@ -226,12 +214,10 @@ function handlePut($db) {
     }
 }
 
-// DELETE - Hapus bundle atau hapus item dari bundle
 function handleDelete($db) {
     $action = $_GET['action'] ?? null;
     
     if ($action === 'remove_item') {
-        // Remove item from bundle
         if (!isset($_GET['item_id'])) {
             http_response_code(400);
             echo json_encode(['success' => false, 'message' => 'ID item tidak ditemukan']);
@@ -249,7 +235,6 @@ function handleDelete($db) {
             echo json_encode(['success' => false, 'message' => 'Gagal menghapus produk dari bundle']);
         }
     } else {
-        // Delete bundle
         if (!isset($_GET['id'])) {
             http_response_code(400);
             echo json_encode(['success' => false, 'message' => 'ID bundle tidak ditemukan']);
@@ -258,13 +243,11 @@ function handleDelete($db) {
         
         $id = $_GET['id'];
         
-        // Delete bundle items first
         $deleteItemsQuery = "DELETE FROM bundle_items WHERE bundle_id = :id";
         $deleteItemsStmt = $db->prepare($deleteItemsQuery);
         $deleteItemsStmt->bindParam(':id', $id);
         $deleteItemsStmt->execute();
         
-        // Delete bundle
         $query = "DELETE FROM bundles WHERE id = :id";
         $stmt = $db->prepare($query);
         $stmt->bindParam(':id', $id);

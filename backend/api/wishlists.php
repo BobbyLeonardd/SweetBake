@@ -33,7 +33,6 @@ function getWishlist() {
     
     $products = [];
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        // Cast types appropriately
         $row['id'] = (int)$row['id'];
         $row['category_id'] = $row['category_id'] ? (int)$row['category_id'] : null;
         $row['price'] = (double)$row['price'];
@@ -57,13 +56,11 @@ function toggleWishlist() {
         return;
     }
 
-    // Check if exists
     $check_query = "SELECT id FROM wishlists WHERE user_id = ? AND product_id = ?";
     $check_stmt = $db->prepare($check_query);
     $check_stmt->execute([$data->user_id, $data->product_id]);
 
     if ($check_stmt->rowCount() > 0) {
-        // Remove
         $query = "DELETE FROM wishlists WHERE user_id = ? AND product_id = ?";
         $stmt = $db->prepare($query);
         if($stmt->execute([$data->user_id, $data->product_id])) {
@@ -72,7 +69,6 @@ function toggleWishlist() {
             echo json_encode(["success" => false, "message" => "Failed to remove from wishlist"]);
         }
     } else {
-        // Add
         $query = "INSERT INTO wishlists (user_id, product_id) VALUES (?, ?)";
         $stmt = $db->prepare($query);
         if($stmt->execute([$data->user_id, $data->product_id])) {

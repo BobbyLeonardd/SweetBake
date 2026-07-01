@@ -7,7 +7,6 @@ $db = $database->getConnection();
 $method = $_SERVER['REQUEST_METHOD'];
 $data = json_decode(file_get_contents("php://input"));
 
-// GET - Get all categories
 if ($method == 'GET') {
     $query = "SELECT * FROM categories ORDER BY name ASC";
     $stmt = $db->prepare($query);
@@ -20,7 +19,6 @@ if ($method == 'GET') {
     ]);
 }
 
-// POST - Create category
 if ($method == 'POST') {
     if (!empty($data->name)) {
         $query = "INSERT INTO categories (name, description) VALUES (:name, :description)";
@@ -40,7 +38,6 @@ if ($method == 'POST') {
     }
 }
 
-// PUT - Update category
 if ($method == 'PUT') {
     if (!empty($data->id) && !empty($data->name)) {
         $query = "UPDATE categories SET name = :name, description = :description WHERE id = :id";
@@ -61,12 +58,10 @@ if ($method == 'PUT') {
     }
 }
 
-// DELETE - Delete category
 if ($method == 'DELETE') {
     $id = isset($_GET['id']) ? $_GET['id'] : null;
     
     if ($id) {
-        // Pengecekan: Apakah kategori ini sedang dipakai oleh produk?
         $checkQuery = "SELECT id FROM products WHERE category_id = :id LIMIT 1";
         $checkStmt = $db->prepare($checkQuery);
         $checkStmt->bindParam(':id', $id);
